@@ -26,6 +26,9 @@ export class UserService {
   }
 
   async fineOne(id: number){
+    if(!id){
+      throw new BadRequestException('Null Exception');;
+    }
     return await this.repo.findOneBy({id});
   }
 
@@ -39,7 +42,6 @@ export class UserService {
     }
      return authenticatedUser;
   }
-
 
   async create(email: string, username: string, password: string){
     const user = this.repo.create({email, password, username});

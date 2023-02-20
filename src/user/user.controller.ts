@@ -9,7 +9,8 @@ import {
   Put,
   UseInterceptors,
   ClassSerializerInterceptor,
-  BadRequestException
+  BadRequestException,
+  Session,
  } from '@nestjs/common';
  import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
 import { CreateUserDto, UpdateUserDto } from './dto/user-dtos';
@@ -37,23 +38,9 @@ export class UserController {
     private authService: AuthService
   ) {}
 
-  @Get('/')
-  findAll() {
-    return this.userService.findAll();
-  }
-
-  @Get('/:id')
-  async fineOne(@Param('id') id: string) {
-    const user =  await this.userService.fineOne(+id);
-    if(!user){
-      throw new NotFoundException(`User with id ${id} not found`);
-    }
-    return user;
-  }
-
   @Post('/signup')
-  create(@Body() body: CreateUserDto) {
-    return this.authService.signup(
+  async create(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await this.authService.signup(
       body.username,
       body.password,
       body.email,
@@ -61,14 +48,23 @@ export class UserController {
         console.log(err)
         throw err;
       });
+    session.id = user.id;
+    return user;
   }
 
   @Post('/login')
-  validateUser(@Body() body: CreateUserDto) {
-    return this.authService.validateUser(body).catch(err => {
+  async validateUser(@Body() body: CreateUserDto, @Session() session: any) {
+    const user = await  this.authService.validateUser(body).catch(err => {
       console.log(err);
       throw err;
     });
+    session.id = user.id;
+    return user;
+  }
+
+  @Post('/signout')
+  async signOut(@Session() session: any) {
+    session.id = null;
   }
 
   @ApiParam({ name: 'id', required: true })
@@ -78,10 +74,33 @@ export class UserController {
   }
   
   @ApiParam({ name: 'id', required: true })
-  @Put('update/:id')
+  @Put('/update/:id')
   async update(@Param('id') id: string, @Body() body: UpdateUserDto) {
     return this.userService.update(+id, body);
   }
+
+  @Get('/get-current-user')
+  getCurrentUser(@Session() session: any) {
+    return this.userService.fineOne(session.id);
+  }
+
+  @ApiParam({ name: 'id', required: true })
+  @Get('/:id')
+  async fineOne(@Param('id') id: string) {
+    const user =  await this.userService.fineOne(+id);
+    if(!user){
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+    return user;
+  }
+  
+  @Get('/')
+  findAll() {
+    return this.userService.findAll();
+  }
+
+  
+
 }
 
 
