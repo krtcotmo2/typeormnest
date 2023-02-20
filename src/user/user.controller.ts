@@ -8,13 +8,15 @@ import {
   Post, 
   Put,
   UseInterceptors,
-  ClassSerializerInterceptor
+  ClassSerializerInterceptor,
+  BadRequestException
  } from '@nestjs/common';
  import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
 import { CreateUserDto, UpdateUserDto } from './dto/user-dtos';
 import { UserService } from './user.service';
 import { ApiParam } from '@nestjs/swagger';
 import { ScrubbedUserDto } from './dto/user-dtos';
+import { AuthService } from './auth.service';
 
 // constructor that ensures that the argument of the serialize is a class
 interface ClassConstructor{
@@ -30,7 +32,10 @@ export function Serialize(dto: ClassConstructor) {
 @Controller('/api/user')
 @Serialize(ScrubbedUserDto)    // can also be applied to each route
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private authService: AuthService
+  ) {}
 
   @Get('/')
   findAll() {
@@ -48,11 +53,22 @@ export class UserController {
 
   @Post('/signup')
   create(@Body() body: CreateUserDto) {
-    return this.userService.create(
-      body.email,
+    return this.authService.signup(
       body.username,
-      body.password
-    ).catch(arg => console.log(arg));
+      body.password,
+      body.email,
+      ).catch(err => {
+        console.log(err)
+        throw err;
+      });
+  }
+
+  @Post('/login')
+  validateUser(@Body() body: CreateUserDto) {
+    return this.authService.validateUser(body).catch(err => {
+      console.log(err);
+      throw err;
+    });
   }
 
   @ApiParam({ name: 'id', required: true })

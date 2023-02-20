@@ -1,16 +1,24 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from './user.entity';
+import { CreateUserDto } from './dto/user-dtos';
 
 @Injectable()
 export class UserService {
-  
   constructor(@InjectRepository(User) private repo: Repository<User>){}
   
-  
-  async find(email: string){
-    return await this.repo.findBy({email});
+  async searchForDuplicateUser(username: string, email: string){
+    const user =  await this.repo.find({
+      where: [
+       {username},
+        {email}
+      ],
+    });
+    if(user.length>0){
+      throw new BadRequestException('User already exists');
+    }
+    return user;
   }
 
   async findAll(){
@@ -19,6 +27,17 @@ export class UserService {
 
   async fineOne(id: number){
     return await this.repo.findOneBy({id});
+  }
+
+  async validateUser(user: CreateUserDto){
+    const authenticatedUser =  await this.repo.findOneBy({
+      username: user.username, 
+      password: user.password
+    });
+    if(!authenticatedUser){
+      throw new BadRequestException('Invalid credentials');
+    }
+     return authenticatedUser;
   }
 
 

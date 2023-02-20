@@ -3,15 +3,16 @@ import { IsEmail, IsInt, IsOptional, IsString } from "class-validator";
 
 
 export class CreateUserDto {
-  @IsEmail()
-  @IsString()
-  email: string;
-
-  @IsString()
-  password: string;
-
   @IsString()
   username: string;
+  
+  @IsString()
+  password: string;
+  
+  @IsEmail()
+  @IsString()
+  @IsOptional()
+  email: string;
 
   @IsOptional()
   @IsInt()
@@ -38,6 +39,9 @@ export class UpdateUserDto {
 }
 
 export class ScrubbedUserDto{
+  @Expose()
+  id: number;
+  
   @Expose()
   username: string;
 
