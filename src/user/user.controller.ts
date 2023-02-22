@@ -9,8 +9,8 @@ import {
   Put,
   UseInterceptors,
   ClassSerializerInterceptor,
-  BadRequestException,
   Session,
+  UseGuards,
  } from '@nestjs/common';
  import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
 import { CreateUserDto, UpdateUserDto } from './dto/user-dtos';
@@ -18,6 +18,8 @@ import { UserService } from './user.service';
 import { ApiParam } from '@nestjs/swagger';
 import { ScrubbedUserDto } from './dto/user-dtos';
 import { AuthService } from './auth.service';
+import { CurrentUser } from 'src/decorators/current-user.decorator';
+import { AuthGuard } from 'src/guards/auth.gaurd';
 
 // constructor that ensures that the argument of the serialize is a class
 interface ClassConstructor{
@@ -48,7 +50,7 @@ export class UserController {
         console.log(err)
         throw err;
       });
-    session.id = user.id;
+    session.userId = user.id;
     return user;
   }
 
@@ -58,30 +60,33 @@ export class UserController {
       console.log(err);
       throw err;
     });
-    session.id = user.id;
+    session.userId = user.id;
     return user;
   }
 
   @Post('/signout')
   async signOut(@Session() session: any) {
-    session.id = null;
+    session.userId = null;
   }
 
+  @UseGuards(AuthGuard)
   @ApiParam({ name: 'id', required: true })
   @Delete('/delete/:id')
   async delete(@Param('id') id: string) {
     return this.userService.delete(+id);
   }
   
+  @UseGuards(AuthGuard)
   @ApiParam({ name: 'id', required: true })
   @Put('/update/:id')
   async update(@Param('id') id: string, @Body() body: UpdateUserDto) {
     return this.userService.update(+id, body);
   }
 
+  @UseGuards(AuthGuard)
   @Get('/get-current-user')
-  getCurrentUser(@Session() session: any) {
-    return this.userService.fineOne(session.id);
+  getCurrentUser(@CurrentUser() currentUser: ScrubbedUserDto) {
+    return currentUser;
   }
 
   @ApiParam({ name: 'id', required: true })

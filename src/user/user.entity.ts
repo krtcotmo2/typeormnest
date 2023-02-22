@@ -44,7 +44,6 @@ export class User {
   logInserted(){
     console.log('Successfully added', this.username, 'with id', this.id);
   }
-
   @BeforeUpdate()
   logPreUpdate(){
     console.log('Attempting to update', this.username, 'with id', this.id);
@@ -53,7 +52,6 @@ export class User {
   logUpdated(){
     console.log('Successfully updated', this.username, 'with id', this.id);
   }
-
   @BeforeRemove()
   logPreRemove(){
     console.log('Attempting to delete', this.username);
