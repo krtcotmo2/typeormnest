@@ -15,7 +15,7 @@ export class User {
   @Column()
   @IsString()
   @Exclude()
-  //exclude is universal and can never be called back in a repose so not good if you want to hide 
+  //exclude is universal and can never be called back in a response so not good if you want to hide 
   password: string;
 
   @Column()

@@ -13,7 +13,8 @@ const salt =  process.env.HASH;
 @Injectable()
 export class AuthService {
   constructor( private userService: UserService ) {}
-    async signup(username: string, password: string, email: string) {
+    
+  async signup(username: string, password: string, email: string) {
       // make user username is unique
       await this.userService.searchForDuplicateUser(username, email);
       // hash password
@@ -29,11 +30,11 @@ export class AuthService {
       return newUser;
     }
 
-    async validateUser(user: CreateUserDto) {
-      const hash = await (scrypt(user.password, salt, 32)) as Buffer;
-      return this.userService.validateUser({
-        ...user,
-        password:hash.toString('hex')
-      });
-    }
+  async validateUser(user: CreateUserDto) {
+    const hash = await (scrypt(user.password, salt, 32)) as Buffer;
+    return this.userService.validateUser({
+      ...user,
+      password:hash.toString('hex')
+    });
+  }
 }
