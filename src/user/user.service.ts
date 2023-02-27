@@ -16,6 +16,7 @@ export class UserService {
       ],
     });
     if(user.length>0){
+      console.log('throwing')
       throw new BadRequestException('User already exists');
     }
     return user;
@@ -37,9 +38,6 @@ export class UserService {
       username: user.username, 
       password: user.password
     });
-    if(!authenticatedUser){
-      throw new BadRequestException('Invalid credentials');
-    }
      return authenticatedUser;
   }
 

@@ -7,12 +7,11 @@ import {
   Param, 
   Post, 
   Put,
-  UseInterceptors,
-  ClassSerializerInterceptor,
   Session,
   UseGuards,
  } from '@nestjs/common';
- import { SerializeInterceptor } from 'src/interceptors/serialize.interceptor';
+ 
+import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateUserDto, UpdateUserDto } from './dto/user-dtos';
 import { UserService } from './user.service';
 import { ApiParam } from '@nestjs/swagger';
@@ -20,17 +19,6 @@ import { ScrubbedUserDto } from './dto/user-dtos';
 import { AuthService } from './auth.service';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { AuthGuard } from 'src/guards/auth.gaurd';
-
-// constructor that ensures that the argument of the serialize is a class
-interface ClassConstructor{
-  new (...arg: any[]): {}
-}
-
-// ClassSerializerInterceptor are universal blockers of data and we use it to block passing password
-  // Custom interceptors allow for certain data to pass under certain conditions. IE age column
-export function Serialize(dto: ClassConstructor) {
-  return UseInterceptors(ClassSerializerInterceptor, new SerializeInterceptor(dto));
-}
 
 @Controller('/api/user')
 @Serialize(ScrubbedUserDto)    // can also be applied to each route
@@ -57,9 +45,9 @@ export class UserController {
   @Post('/login')
   async validateUser(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await  this.authService.validateUser(body).catch(err => {
-      console.log(err);
       throw err;
     });
+    console.log(2,body, session)
     session.userId = user.id;
     return user;
   }
@@ -86,6 +74,10 @@ export class UserController {
   @UseGuards(AuthGuard)
   @Get('/get-current-user')
   getCurrentUser(@CurrentUser() currentUser: ScrubbedUserDto) {
+    /* 
+      because we are using the CurrentUser decorator, we get a instance of the user 
+      by selecting it based off the sessionId userId 
+    */
     return currentUser;
   }
 
