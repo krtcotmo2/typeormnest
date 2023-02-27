@@ -35,7 +35,6 @@ export class UserController {
       body.password,
       body.email,
       ).catch(err => {
-        console.log(err)
         throw err;
       });
     session.userId = user.id;
@@ -47,7 +46,6 @@ export class UserController {
     const user = await  this.authService.validateUser(body).catch(err => {
       throw err;
     });
-    console.log(2,body, session)
     session.userId = user.id;
     return user;
   }

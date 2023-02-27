@@ -7,8 +7,9 @@ import { CreateUserDto } from './dto/user-dtos';
 
 const scrypt = promisify(_scrypt);
 
-dotenv.config()
-const salt =  process.env.SALT;
+dotenv.config();
+
+const salt =  `process.env.${process.env.NODE_ENV}.SALT`;
 
 @Injectable()
 export class AuthService {
@@ -32,7 +33,6 @@ export class AuthService {
     }
 
   async validateUser(user: CreateUserDto) {
-    console.log(2, user)
     const hash = await (scrypt(user.password, salt, 32)) as Buffer;
     const authenticatedUser = await this.userService.validateUser({
       ...user,

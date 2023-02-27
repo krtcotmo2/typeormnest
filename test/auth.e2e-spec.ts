@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
 import * as request from 'supertest';
 import { AppModule } from './../src/app.module';
-import exp from 'constants';
 
 describe('Authentication System (e2e)', () => {
   let app: INestApplication;
@@ -34,7 +33,31 @@ describe('Authentication System (e2e)', () => {
         expect(id).toBeDefined();
         expect(username).toBe(username);
         expect(email).toBe(email);
-        console.log(res.body)
       });
+  });
+
+  it('Create a user then get the current logged in user', async() => {
+    const username = 'randPerson';
+    const email = 'random.person@comcast.net'
+    
+    const userResponse = await request(app.getHttpServer())
+      .post('/api/user/signup')
+      .send(
+        {
+          "email": email,
+          "username": username,
+          "password": "1234"
+        }
+      )
+      .expect(201)
+    
+      const cookie = userResponse.get('Set-Cookie');
+      const {body} = await request(app.getHttpServer())
+        .get('/api/user/get-current-user')
+        .set('Cookie', cookie)
+        .expect(200);
+
+      expect(body.email).toBe('random.person@comcast.net');
+
   });
 });
