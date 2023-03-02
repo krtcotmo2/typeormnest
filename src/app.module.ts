@@ -47,6 +47,7 @@ const cookieSession = require('cookie-session');
     ],
   })
   // this is where the session is applied globally
+  // THIS BECOMES  A GLOBAL MIDDLEWARE
   export class AppModule {
     configure(consumer: MiddlewareConsumer){
       consumer.apply(

@@ -1,3 +1,10 @@
+/*
+IMPORTANT NOTE:
+INTERCEPTORS ONLY RUN AFTER GUARDS HAVE RUN, NEVER BEFORE
+BECAUSE OF THIS THE ADMIN GUARD CAN NOT ACCESS THE CURRENT USER
+WITH SWITCHING THIS TO A MIDDLEWARE THE ADMIN GUARD WOULD ALWAYS FAIL
+*/
+
 import {
   NestInterceptor,
   ExecutionContext,
@@ -24,3 +31,5 @@ export class CurrentUserInterceptor implements NestInterceptor {
     return handler.handle();
   }
 }
+
+

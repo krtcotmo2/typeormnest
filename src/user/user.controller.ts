@@ -18,7 +18,7 @@ import { ApiParam } from '@nestjs/swagger';
 import { ScrubbedUserDto } from './dto/user-dtos';
 import { AuthService } from './auth.service';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
-import { AuthGuard } from 'src/guards/auth.gaurd';
+import { AuthGuard } from 'src/guards/auth.guard';
 
 @Controller('/api/user')
 @Serialize(ScrubbedUserDto)    // can also be applied to each route

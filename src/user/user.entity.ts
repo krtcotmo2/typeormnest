@@ -1,7 +1,7 @@
-import { IsEmail, IsInt, isInt, IsOptional, IsString } from "class-validator";
-import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, BeforeInsert, BeforeUpdate, BeforeRemove, AfterRemove, AfterUpdate } from "typeorm";
+import { IsBoolean, IsEmail, IsInt, isInt, IsOptional, IsString } from "class-validator";
+import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, BeforeInsert, BeforeUpdate, BeforeRemove, AfterRemove, AfterUpdate, OneToMany, JoinColumn } from "typeorm";
 import { Exclude } from "class-transformer";
-import { Optional } from "@nestjs/common";
+import { Report } from "src/report/report.entity";
 
 @Entity()
 export class User {
@@ -18,19 +18,21 @@ export class User {
   //exclude is universal and can never be called back in a response so not good if you want to hide 
   password: string;
 
+  @OneToMany( () => Report, (report) => report.user )
+  reports: Report[];
+
   @Column()
   @IsString()
   username: string;
+
+  @Column({default: false})
+  @IsBoolean()
+  administrator: boolean;
 
   // demo of sensitive info filtered by custom interceptor.
   @Column({ type: 'int', nullable: true})
   @IsInt()
   age: number;
-
-
-
-
-
 
 
 

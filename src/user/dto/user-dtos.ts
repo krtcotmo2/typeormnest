@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsEmail, IsInt, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsEmail, IsInt, IsOptional, IsString } from "class-validator";
 
 
 export class CreateUserDto {
@@ -36,6 +36,10 @@ export class UpdateUserDto {
   @IsOptional()
   @IsInt()
   age: number
+
+  @IsOptional()
+  @IsBoolean()
+  administrator: boolean
 }
 
 export class ScrubbedUserDto{
@@ -47,4 +51,7 @@ export class ScrubbedUserDto{
 
   @Expose()
   email: string;
+
+  @Expose()
+  administrator: boolean;
 }
