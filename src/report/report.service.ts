@@ -73,26 +73,30 @@ export class ReportService {
 
   async useQueryBuilder(searchParam: EstimateDto){
     const { make, model, year, milage} = searchParam;
-    const oldYear = year - 3;
-    const newYear  = year + 3;
     const list = await this.repo.createQueryBuilder()
       .select('*')
-      // this is possibly susceptible to query injection
-      // .where({
-      //   make: searchParam.make, 
-      //   model: searchParam.model,
-      //   year: searchParam.year-3 && searchParam.year+3
-      // })
-      .where( 'make=:make', {make})
-      .andWhere('model=:model', {model})
-      .andWhere('year - :year BETWEEN -20 AND 20', {year})
-      .andWhere('approved IS TRUE')
+      .where({
+        make: make, 
+        model: model,
+        year: Between(year-20, year+20)
+      })
+      .orWhere(
+        {make: "Nissan"}
+      )
+      // another possible way but nota s clean
+      // .where( 'make=:make', {make})
+      // .andWhere('model=:model', {model})
+      // .andWhere('year - :year BETWEEN -20 AND 20', {year})
+      // .andWhere('approved IS TRUE')
       .orderBy('year', "DESC")
       .addOrderBy('price', "DESC")
-      .limit(4)
+      .limit(20)
       .getRawMany();
-    const avgPrice = getAveragePrice(list);  
-    return {'average-price': avgPrice};
+      
+    //const avgPrice = getAveragePrice(list);  
+    console.log(list);
+    return list
+    // return {'average-price': avgPrice};
   }
   
 }

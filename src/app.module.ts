@@ -49,9 +49,11 @@ const cookieSession = require('cookie-session');
   // this is where the session is applied globally
   // THIS BECOMES  A GLOBAL MIDDLEWARE
   export class AppModule {
+    constructor(private config: ConfigService){}
+
     configure(consumer: MiddlewareConsumer){
       consumer.apply(
-        cookieSession({ keys: ['sdf234'] }) 
+        cookieSession({ keys: [this.config.get<string>('COOKIE_KEY')] }) 
         ) 
         .forRoutes('*');
       }

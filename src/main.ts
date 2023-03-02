@@ -19,7 +19,7 @@ async function bootstrap() {
     These have been implemented globally. Pipe and session in app.Module
   */
  /*
-  app.use(cookieSession({ keys: ['sdf234']}));
+  app.use(cookieSession({ keys: ['randomString']}));
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true
