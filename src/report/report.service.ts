@@ -1,10 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { ApproverReportDto, CreateReportDto } from './dto/report-dtos';
+import { Between, LessThan, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
+import { ApproverReportDto, CreateReportDto, EstimateDto } from './dto/report-dtos';
 import { Report } from './report.entity';
 import { User } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
+import { getAveragePrice } from './business-logic/report-business-logic';
 @Injectable()
 export class ReportService {
   constructor(
@@ -12,6 +13,7 @@ export class ReportService {
   ){}
 
   async findAll(){
+    // did not show the user data. needed to use the createQueryBuilder (see useQueryBuilder)
     return await this.repo.find({relations : ['user'], loadRelationIds:true})
       .then(reports => {
         return reports
@@ -50,4 +52,47 @@ export class ReportService {
     report.approved = approved;
     return this.repo.save(report);
   }
+
+  async getEstimate(searchParam: EstimateDto){
+    const list = await this.repo.find({
+      where: {
+        model: searchParam.model,
+        make: searchParam.make,
+      },
+      order:{
+        
+      }
+    });
+
+    return {
+      make: searchParam.make,
+      model: searchParam.model,
+      price: +(getAveragePrice(list).toFixed(2)),
+    }
+  }
+
+  async useQueryBuilder(searchParam: EstimateDto){
+    const { make, model, year, milage} = searchParam;
+    const oldYear = year - 3;
+    const newYear  = year + 3;
+    const list = await this.repo.createQueryBuilder()
+      .select('*')
+      // this is possibly susceptible to query injection
+      // .where({
+      //   make: searchParam.make, 
+      //   model: searchParam.model,
+      //   year: searchParam.year-3 && searchParam.year+3
+      // })
+      .where( 'make=:make', {make})
+      .andWhere('model=:model', {model})
+      .andWhere('year - :year BETWEEN -20 AND 20', {year})
+      .andWhere('approved IS TRUE')
+      .orderBy('year', "DESC")
+      .addOrderBy('price', "DESC")
+      .limit(4)
+      .getRawMany();
+    const avgPrice = getAveragePrice(list);  
+    return {'average-price': avgPrice};
+  }
+  
 }

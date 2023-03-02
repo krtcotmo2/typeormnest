@@ -7,10 +7,11 @@ import {
   Post, 
   Session, 
   Patch,
-  UseGuards
+  UseGuards,
+  Query
 } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { ApproverReportDto, CreateReportDto, ReportDto } from './dto/report-dtos';
+import { ApproverReportDto, CreateReportDto, EstimateDto, ReportDto } from './dto/report-dtos';
 import { ReportService } from './report.service';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
@@ -31,6 +32,13 @@ export class ReportController {
       throw err;
     })
     return report;
+  }
+
+  @Get('/estimate')
+  @UseGuards(AuthGuard)
+  async getEstimate(@Query() query:EstimateDto ){
+    // return this.reportService.getEstimate(query);
+    return this.reportService.useQueryBuilder(query); 
   }
 
   @Get()
@@ -57,7 +65,6 @@ export class ReportController {
   async delete(@Param('id') id: string){
     return this.reportService.delete(id);
   }
-
 
 }
 

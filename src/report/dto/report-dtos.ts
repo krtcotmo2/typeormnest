@@ -61,3 +61,32 @@ export class ApproverReportDto{
   @IsBoolean()
   approved: boolean;
 }
+
+export class EstimateDto{
+  @IsString()
+  make: string;
+
+  @IsString()
+  model: string;
+
+  // in this case the deconstruction just gets the the year property.
+  @Transform( ({value}) => +value )
+  @IsInt()
+  @Min(1930)
+  @Max(new Date().getFullYear() + 1)
+  year: number;
+
+  @IsOptional()
+  @IsLatitude()
+  lat: number;
+
+  @IsOptional()
+  @IsLongitude()
+  long: number;
+
+  @Transform( ({value}) => +value )
+  @IsOptional()
+  @Min(0)
+  @Max(1000000)
+  milage: number;
+} 
