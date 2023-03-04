@@ -14,7 +14,7 @@ describe('UserController', () => {
     {id: 1, username: 'kurt', password: 'cooney', email: 'kurt@mail.com'} as User,
     {id: 2, username: 'bryan', password: 'cooney', email: 'bryan@mail.com'} as User,
   ]
-  // look in the controller and see all teh methods that are called by the services.
+  // look in the controller and see all the methods that are called by the services.
   const fakeUserService: Partial<UserService> = {
     fineOne: (id: Number) => {
       const user = users.find(user => user.id === id);

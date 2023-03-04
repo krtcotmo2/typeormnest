@@ -8,6 +8,8 @@ import { ReportModule } from './report/report.module';
 import { User } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { CharacterModule } from './character/character.module';
+import { Characters } from './character/characters.entity';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -18,6 +20,7 @@ const cookieSession = require('cookie-session');
     }),
     UserModule, 
     ReportModule,
+    CharacterModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory(config: ConfigService) {
@@ -28,7 +31,7 @@ const cookieSession = require('cookie-session');
           synchronize: true,
         }
       },
-    }), 
+    }),
     // TypeOrmModule.forRoot({
       //   type: 'sqlite',
       //   database: 'db.sqlite',
