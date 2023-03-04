@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 // import { NotFoundError } from 'rxjs';
-// import { AppDataSource } from 'src/app-data-source';
+// git add import { AppDataSource } from 'src/app-data-source';
 import { Repository } from 'typeorm';
 import { Characters } from './characters.entity';
 
