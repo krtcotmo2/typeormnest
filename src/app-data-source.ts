@@ -1,5 +1,7 @@
+import { Channel } from "diagnostics_channel";
 import { DataSource } from "typeorm";
 import { Characters } from "./character/characters.entity";
+import { Charstats } from "./stat/stat.entity";
 
 export const AppDataSource = new DataSource({
   type:'mysql',
@@ -9,7 +11,7 @@ export const AppDataSource = new DataSource({
   password: process.env.dbpass,
   database: process.env. dbSource,
   synchronize: false,
-  entities: [Characters]
+  entities: [Characters, Charstats]
 });
 
 AppDataSource.initialize()

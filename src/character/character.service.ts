@@ -7,7 +7,9 @@ import { Characters } from './characters.entity';
 
 @Injectable()
 export class CharacterService {
-  constructor( @InjectRepository(Characters) private repo: Repository<Characters>){}
+  constructor( 
+    @InjectRepository(Characters) private repo: Repository<Characters>
+  ){}
 
   async getCharacter(id:string) {
     const char =  await AppDataSource.manager.findOneBy(Characters, {charID: +id});
