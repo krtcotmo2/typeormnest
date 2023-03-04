@@ -1,8 +1,11 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { ApiParam } from '@nestjs/swagger';
 import { CharacterService } from './character.service';
+import { Serialize } from 'src/interceptors/serialize.interceptor';
+import { baseChar } from './dto/character-dto';
 
 @Controller('/api/character')
+@Serialize(baseChar)    // can also be applied to each route
 export class CharacterController {
   constructor(private characterService: CharacterService){}
   

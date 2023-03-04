@@ -39,3 +39,34 @@ export class CharactersDto {
   image: string;
   
 }
+export class baseChar {
+  @Expose()
+  charID: number;
+
+  @Expose()
+  userID: number;
+
+  @Expose()
+  charName: string;
+
+  @Expose()
+  charHP: number;
+  
+  @Expose()
+  CharXP: number;
+  
+  @Expose()
+  raceID: number;
+  
+  @Expose()
+  alignID: number;
+  
+  @Expose()
+  init: number;
+  
+  @Expose()
+  isDead: boolean;
+  
+  @Expose()
+  image: string;
+}
