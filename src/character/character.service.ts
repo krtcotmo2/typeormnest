@@ -1,7 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-// import { NotFoundError } from 'rxjs';
-// git add import { AppDataSource } from 'src/app-data-source';
+import { AppDataSource } from 'src/app-data-source';
 import { Repository } from 'typeorm';
 import { Characters } from './characters.entity';
 
@@ -9,14 +8,13 @@ import { Characters } from './characters.entity';
 @Injectable()
 export class CharacterService {
   constructor( @InjectRepository(Characters) private repo: Repository<Characters>){}
-  // ds = AppDataSource.initialize();
 
   async getCharacter(id:string) {
-    // const char =  await AppDataSource.manager.findOneBy(Characters, {charID: +id});
-    // if(!char){
-    //   throw new NotFoundException("Character Not Found");
-    // }
-    return 'A character';
+    const char =  await AppDataSource.manager.findOneBy(Characters, {charID: +id});
+    if(!char){
+      throw new NotFoundException("Character Not Found");
+    }
+    return char;
   }
   getEnv(){
     return {
