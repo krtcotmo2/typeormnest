@@ -19,6 +19,9 @@ export class CharacterService {
     return char;
   }
   getEnv(){
-    return process.env.NODE_ENV;
+    return {
+      mode: process.env.NODE_ENV,
+      user: process.env.socketURL
+    };
   }
 }
