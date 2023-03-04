@@ -1,6 +1,7 @@
 import { Channel } from "diagnostics_channel";
 import { DataSource } from "typeorm";
 import { Characters } from "./character/characters.entity";
+import { Charsaves } from "./saves/saves.entity";
 import { Charstats } from "./stat/stat.entity";
 
 export const AppDataSource = new DataSource({
@@ -11,7 +12,11 @@ export const AppDataSource = new DataSource({
   password: process.env.dbpass,
   database: process.env. dbSource,
   synchronize: false,
-  entities: [Characters, Charstats]
+  entities: [
+    Characters, 
+    Charstats, 
+    Charsaves
+  ]
 });
 
 AppDataSource.initialize()
