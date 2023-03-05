@@ -10,6 +10,8 @@ import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CharacterModule } from './character/character.module';
 import { Characters } from './character/characters.entity';
+import { StatModule } from './stat/stat.module';
+import { SavesModule } from './saves/saves.module';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -33,6 +35,8 @@ const cookieSession = require('cookie-session');
         }
       },
     }),
+    StatModule,
+    SavesModule,
     // TypeOrmModule.forRoot({
       //   type: 'sqlite',
       //   database: 'db.sqlite',

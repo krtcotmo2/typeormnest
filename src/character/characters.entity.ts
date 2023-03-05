@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsInt, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsInt, IsOptional, IsString } from "class-validator";
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
@@ -49,6 +49,7 @@ export class Characters {
 
   @Column()
   @IsString()
+  @IsOptional()
   image: string;
   
 }
