@@ -12,12 +12,11 @@ export const AppDataSource = new DataSource({
   password: process.env.dbpass,
   database: process.env.dbSource,
   synchronize: false,
-  entities: ['**/.entity.js']
-  // entities: [
-  //   Characters, 
-  //   Charstats, 
-  //   Charsaves
-  // ]
+  entities: [
+    Characters, 
+    Charstats, 
+    Charsaves
+  ]
 });
 
 AppDataSource.initialize()
