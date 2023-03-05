@@ -10,7 +10,7 @@ export const AppDataSource = new DataSource({
   port: 3306,
   username: process.env.dbUser,
   password: process.env.dbpass,
-  database: process.env. dbSource,
+  database: process.env.dbSource,
   synchronize: false,
   entities: [
     Characters, 

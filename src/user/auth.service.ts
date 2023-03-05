@@ -7,9 +7,11 @@ import { CreateUserDto } from './dto/user-dtos';
 
 const scrypt = promisify(_scrypt);
 
-dotenv.config();
+dotenv.config(
+  {path: `.env.${process.env.NODE_ENV}`}
+);
 
-const salt =  `process.env.${process.env.NODE_ENV}.SALT`;
+const salt =  process.env.SALT;
 
 @Injectable()
 export class AuthService {
