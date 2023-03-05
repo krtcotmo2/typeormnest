@@ -11,7 +11,6 @@ export class CharacterController {
   constructor(private characterService: CharacterService){}
   
   @Get('/env')
-  @Serialize(baseChar) 
   getEnv(){
     return this.characterService.getEnv();
   }
