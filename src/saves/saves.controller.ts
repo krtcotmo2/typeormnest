@@ -1,4 +1,12 @@
-import { Controller } from '@nestjs/common';
+import { Controller, Get, Param } from '@nestjs/common';
+import { SavesService } from './saves.service';
 
-@Controller('saves')
-export class SavesController {}
+@Controller('api/saves')
+export class SavesController {
+    constructor(private savesService: SavesService){}
+
+    @Get('/:id')
+    getCharSaves (@Param('id') id: string){
+       return this.savesService.getCharSaves(+id);
+    }
+}
