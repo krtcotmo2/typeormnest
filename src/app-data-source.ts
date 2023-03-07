@@ -1,9 +1,11 @@
 import { Channel } from "diagnostics_channel";
 import { DataSource } from "typeorm";
+import * as dotenv from "dotenv";
 import { Characters } from "./character/characters.entity";
 import { Charsaves } from "./saves/saves.entity";
 import { Charstats } from "./stat/stat.entity";
 
+dotenv.config();  
 export const AppDataSource = new DataSource({
   type:'mysql',
   host: process.env.dbHost,
@@ -12,19 +14,17 @@ export const AppDataSource = new DataSource({
   password: process.env.dbpass,
   database: process.env.dbSource,
   synchronize: false,
-  // entities: [
-  //   Characters, 
-  //   Charstats, 
-  //   Charsaves
-  // ]
   entities: [
-    "dist/**/*.entity{.ts,.js}"
-]
+    Characters, 
+    Charstats, 
+    Charsaves
+  ]
+  
 });
 
 AppDataSource.initialize()
-  .then(() => {
-    console.log('=======> connection established')
+  .then((arg) => {
+    console.log('=======> connection established', __dirname)
   })
   .catch( err=> {
     console.log(err);
