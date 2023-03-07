@@ -1,5 +1,4 @@
 import { Channel } from "diagnostics_channel";
-import { join } from "path";
 import { DataSource } from "typeorm";
 import { Characters } from "./character/characters.entity";
 import { Charsaves } from "./saves/saves.entity";
@@ -13,12 +12,11 @@ export const AppDataSource = new DataSource({
   password: process.env.dbpass,
   database: process.env.dbSource,
   synchronize: false,
-  // entities: [
-  //   Characters, 
-  //   Charstats, 
-  //   Charsaves
-  // ]
-  entities:[join(__dirname, '/../**/**.entity{.ts,.js}')]
+  entities: [
+    Characters, 
+    Charstats, 
+    Charsaves
+  ]
 });
 
 AppDataSource.initialize()
