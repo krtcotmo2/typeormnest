@@ -6,6 +6,8 @@ import { Charsaves } from "./saves/saves.entity";
 import { Charstats } from "./stat/stat.entity";
 import { Charskills } from "./skill/skills.entity";
 import { Skills } from "./skill/defaultSkills.entity";
+import { Chartohits } from "./to-hit/to-hit.entity";
+import { Tohits } from "./to-hit/hits.entity";
 
 dotenv.config();  
 export const AppDataSource = new DataSource({
@@ -21,7 +23,10 @@ export const AppDataSource = new DataSource({
     Charstats, 
     Charsaves,
     Charskills,
-    Skills
+    Skills,
+    Chartohits,
+    Tohits
+    
   ]
   
 });

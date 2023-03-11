@@ -13,6 +13,7 @@ import { Characters } from './character/characters.entity';
 import { StatModule } from './stat/stat.module';
 import { SavesModule } from './saves/saves.module';
 import { SkillModule } from './skill/skill.module';
+import { ToHitModule } from './to-hit/to-hit.module';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -40,6 +41,7 @@ const cookieSession = require('cookie-session');
     StatModule,
     SavesModule,
     SkillModule,
+    ToHitModule,
     // TypeOrmModule.forRoot({
       //   type: 'sqlite',
       //   database: 'db.sqlite',
