@@ -5,12 +5,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Charstats } from './stat.entity';
 import { CharacterService } from 'src/character/character.service';
 import { Characters } from 'src/character/characters.entity';
+import { SavesService } from 'src/saves/saves.service';
 
 @Module({
   imports:[
     TypeOrmModule.forFeature([Charstats, Characters]),
   ],
-  providers: [StatService, CharacterService],
+  providers: [StatService, CharacterService, SavesService],
   controllers: [StatController]
 })
 export class StatModule {}

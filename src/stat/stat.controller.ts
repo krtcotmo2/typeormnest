@@ -7,7 +7,7 @@ import {
   Post,
   Put,
 } from '@nestjs/common';
-import { from, map, Observable, switchMap } from 'rxjs';
+import { from, map, Observable, of, switchMap } from 'rxjs';
 import { CharacterService } from 'src/character/character.service';
 import { CharWithStats } from 'src/character/dto/character-dto';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
@@ -39,13 +39,12 @@ export class StatController {
   }
 
   @Serialize(StatDto)
-  @Put('/:charId/:id')
+  @Put('/:charId')
   updateStatLine(
     @Param('charId') charId: string,
-    @Param('id') id: string,
     @Body() stat: UpdateStatDto,
   ) {
-    return this.statsService.updateStatLine(id, stat).pipe(
+    return this.statsService.updateStatLine(stat).pipe(
       switchMap(() => {
         return this.characterService.getCharacterWithStats(charId);
       }),
@@ -54,15 +53,16 @@ export class StatController {
   }
 
   @Serialize(SaveStatDto)
-  @Post()
-  createStatLine(@Body() stat: SaveStatDto) {
+  @Post('/:charId')
+  createStatLine(@Param('charId') charId: string, @Body() stat: SaveStatDto) {
+    stat.charID = +charId;
     return this.statsService.createStatLine(stat).pipe(
-      switchMap((st) => {
+      switchMap(() => {
         return this.characterService.getCharacterWithStats(
-          st.charID.toString(),
+          charId.toString(),
         );
       }),
-      map((char) => JSON.stringify(char)),
+      map((char) => of(char)),
     );
   }
 

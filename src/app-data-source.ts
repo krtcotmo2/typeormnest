@@ -4,6 +4,8 @@ import * as dotenv from "dotenv";
 import { Characters } from "./character/characters.entity";
 import { Charsaves } from "./saves/saves.entity";
 import { Charstats } from "./stat/stat.entity";
+import { Charskills } from "./skill/skills.entity";
+import { Skills } from "./skill/defaultSkills.entity";
 
 dotenv.config();  
 export const AppDataSource = new DataSource({
@@ -17,7 +19,9 @@ export const AppDataSource = new DataSource({
   entities: [
     Characters, 
     Charstats, 
-    Charsaves
+    Charsaves,
+    Charskills,
+    Skills
   ]
   
 });

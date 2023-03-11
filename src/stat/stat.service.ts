@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { from, map, Observable, switchMap, tap } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
+import { errorHandler } from 'src/interceptors/errorHandler';
 import { buildCharStats, getValues } from './business-logic/stat-helper';
 import { SaveStatDto, StatDto, UpdateStatDto } from './dto/stat-dto';
 import { Charstats } from './stat.entity';
@@ -13,9 +14,9 @@ export class StatService {
     });
 
     if (stats.length === 0) {
-      throw new NotFoundException('Character and/or Stats Not Found');
+      // errorHandler(new NotFoundException('Character and/or Stats Not Found MF'));
     }
-    return buildCharStats(stats);
+    return stats;
   }
 
   async getSingleStat(charId: string, statId: string) {
@@ -29,10 +30,10 @@ export class StatService {
     return stat;
   }
 
-  updateStatLine(id: string, values: UpdateStatDto): Observable<any> {
+  updateStatLine(values: UpdateStatDto): Observable<any> {
     return from(AppDataSource.manager.update(
       Charstats,
-      {id: +id},
+      {id: values.id},
       {
         ...values, 
         updatedAt: new Date()

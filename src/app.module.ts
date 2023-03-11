@@ -12,6 +12,7 @@ import { CharacterModule } from './character/character.module';
 import { Characters } from './character/characters.entity';
 import { StatModule } from './stat/stat.module';
 import { SavesModule } from './saves/saves.module';
+import { SkillModule } from './skill/skill.module';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -31,12 +32,14 @@ const cookieSession = require('cookie-session');
           database: 'db.sqlite',
           //database: config.get<string>('DB_NAME'),
           entities: [User, Report],
-          synchronize: true,
+          synchronize: false,
+          autoLoadEntities: true,
         }
       },
     }),
     StatModule,
     SavesModule,
+    SkillModule,
     // TypeOrmModule.forRoot({
       //   type: 'sqlite',
       //   database: 'db.sqlite',

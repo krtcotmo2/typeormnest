@@ -90,6 +90,7 @@ export class DefinedStats {
 
 export class SaveStatDto {
   @IsInt()
+  @IsOptional()
   charID: number;
 
   @IsInt()
@@ -109,6 +110,9 @@ export class SaveStatDto {
   modDesc: string;
 }
 export class UpdateStatDto {
+  @IsInt()
+  id: number;
+
   @IsInt()
   @IsOptional()
   score: number;
