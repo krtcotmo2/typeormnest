@@ -1,6 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
+import { from, map, Observable, switchMap, tap } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
 import { buildCharStats, getValues } from './business-logic/stat-helper';
+import { SaveStatDto, StatDto, UpdateStatDto } from './dto/stat-dto';
 import { Charstats } from './stat.entity';
 
 @Injectable()
@@ -27,5 +29,36 @@ export class StatService {
     return stat;
   }
 
+  updateStatLine(id: string, values: UpdateStatDto): Observable<any> {
+    return from(AppDataSource.manager.update(
+      Charstats,
+      {id: +id},
+      {
+        ...values, 
+        updatedAt: new Date()
+      }));
+  }
+
+  createStatLine(values: SaveStatDto): Observable<Charstats> {
+    const a = AppDataSource.manager.create(Charstats, values);
+    return from(AppDataSource.manager.save(Charstats, {
+      ...a,
+      updatedAt: new Date(),
+      createdAt: new Date(),
+    }));
+  }
+
+  deleteStatLine(id: string){
+    return from(AppDataSource.manager.delete(
+      Charstats,
+      {id: +id},
+    ));
+  }
+
+  private getSingleStaById(id: string) {
+    return AppDataSource.manager.findOneBy(Charstats, {
+        id: +id,
+      })
+  }
  
 }

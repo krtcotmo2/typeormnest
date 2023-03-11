@@ -72,7 +72,11 @@ export class CharacterService {
         ...char, 
         updatedAt: new Date()
       }
-    ));
+    )).pipe(
+      switchMap( () => {
+        return this.getCharacterWithStats(id.toString());
+      })
+    );
 
   }
 

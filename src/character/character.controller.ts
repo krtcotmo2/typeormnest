@@ -41,9 +41,7 @@ export class CharacterController {
   @Serialize(Characters)
   updateCharacter(@Body() character: UpdateCharactersDto, @Param('id') id: string){
     return this.characterService.updateCharacter(character, +id).pipe(
-      map( arg => {
-        console.log(arg);
-      })
+      map( arg => JSON.stringify(arg)),
     );
   }
 }
