@@ -2,26 +2,27 @@ import {
     IsBoolean,
     IsDate,
     IsInt,
+    IsString,
   } from 'class-validator';
   import { Column, Entity, PrimaryColumn } from 'typeorm';
   
   @Entity()
-  export class Charlevels {
+  export class Acs {
     @PrimaryColumn()
     @IsInt()
-    id: number;
+    acID: number;
 
     @Column()
     @IsInt()
     charID: number;
 
     @Column()
-    @IsInt()
-    classID: number;
+    @IsString()
+    acDesc: string;
 
-    @Column()
+    @PrimaryColumn()
     @IsInt()
-    classLevel: number;
+    sortValue: number;
   
     @Column()
     @IsDate()
