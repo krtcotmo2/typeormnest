@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { from, map } from 'rxjs';
+import { from, map, switchMap } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
+import { UpdateExpendablesDto } from './dto/expendable-dto';
 import { Expendables } from './expendable.entity';
 
 @Injectable()
@@ -20,5 +21,28 @@ export class ExpendableService {
                 })
             })
         );
+    }
+
+    updateCharExpendables(expendable: UpdateExpendablesDto, expId: number){
+        return from(AppDataSource.manager.update(
+            Expendables,
+            {id: expId},
+            {
+                ...expendable,
+                updatedAt: new Date()
+            }
+        )).pipe(
+            switchMap(()=> {
+               return this.getSingleExpendables(expId.toString());
+            },
+            )
+        );
+    }
+
+    private getSingleExpendables(expId: string){
+        return from(AppDataSource.manager.findBy(
+            Expendables,
+            {id: +expId}
+        ));
     }
 }
