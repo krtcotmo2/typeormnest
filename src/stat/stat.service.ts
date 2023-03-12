@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
-import { from, map, Observable, switchMap, tap } from 'rxjs';
+import { from, map, Observable, of, switchMap, tap } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
 import { errorHandler } from 'src/interceptors/errorHandler';
 import { buildCharStats, getValues } from './business-logic/stat-helper';
@@ -8,15 +8,19 @@ import { Charstats } from './stat.entity';
 
 @Injectable()
 export class StatService {
-  async getCharStats(charId: string) {
-    const stats = await AppDataSource.manager.findBy(Charstats, {
+  
+  getCharStats(charId: string) {
+    return from(AppDataSource.manager.findBy(Charstats, {
       charID: +charId,
-    });
+    })).pipe(
+      switchMap( statList => {
+        if(statList.length < 1){
+          errorHandler(new NotFoundException('Stats not found for user'));
+        }
+        return of(statList);
+      }),
+    );
 
-    if (stats.length === 0) {
-      // errorHandler(new NotFoundException('Character and/or Stats Not Found MF'));
-    }
-    return stats;
   }
 
   async getSingleStat(charId: string, statId: string) {

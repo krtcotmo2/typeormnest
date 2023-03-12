@@ -26,7 +26,7 @@ export class StatController {
     private characterService: CharacterService,
   ) {}
 
-  @Serialize(DefinedStats)
+  @Serialize(StatDto)
   @Get('/:charId')
   getCharStats(@Param('charId') charId: string) {
     return this.statsService.getCharStats(charId);

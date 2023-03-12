@@ -7,9 +7,6 @@ import { Charskills } from './skills.entity';
 import { Skills } from './defaultSkills.entity';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([Characters, Charskills, Skills]),
-  ],
   providers: [SkillService],
   controllers: [SkillController]
 })
