@@ -10,8 +10,8 @@ export class SpellsService {
         return from(AppDataSource.manager.findBy(
             Charspells,
             {charID: +charId})).pipe(
-                map( (arg: Charspells[])  => {
-                    return arg.sort(
+                map( (spellList: Charspells[])  => {
+                    return spellList.sort(
                         (val1, val2) => {
                             if(val1.spellLevel === val2.spellLevel){
                                 return val1.spellName < val2.spellName ? -1 : 1

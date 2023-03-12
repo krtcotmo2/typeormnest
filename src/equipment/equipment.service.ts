@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { from, map, of, switchMap } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
-import { Charequip } from './char-equip-entity';
+import { Charequip } from './char-equip.entity';
 
 @Injectable()
 export class EquipmentService {

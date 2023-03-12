@@ -8,8 +8,9 @@ import { Charskills } from "./skill/skills.entity";
 import { Skills } from "./skill/defaultSkills.entity";
 import { Chartohits } from "./to-hit/to-hit.entity";
 import { Tohits } from "./to-hit/hits.entity";
-import { Charequip } from "./equipment/char-equip-entity";
+import { Charequip } from "./equipment/char-equip.entity";
 import { Charspells } from "./spells/spells.entity";
+import { Expendables } from "./expendable/expendable.entity";
 
 dotenv.config();  
 export const AppDataSource = new DataSource({
@@ -30,6 +31,7 @@ export const AppDataSource = new DataSource({
     Tohits,
     Charequip,
     Charspells,
+    Expendables,
   ]
   
 });
