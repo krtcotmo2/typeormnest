@@ -1,7 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { CreateSavesDto, UpdateSavesDto } from './dto/saves-dto';
-import { Charsaves } from './saves.entity';
 import { SavesService } from './saves.service';
 
 @Controller('api/saves')
