@@ -2,6 +2,8 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { forkJoin, from, map, Observable, of, switchMap } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
+import { Alignment } from 'src/enum/alignments';
+import { Races } from 'src/enum/races';
 import { buildCharSaves } from 'src/saves/business-logic/saves-helper';
 import { SavesService } from 'src/saves/saves.service';
 import { buildCharStats } from 'src/stat/business-logic/stat-helper';
@@ -48,6 +50,8 @@ export class CharacterService {
         }
         const hybrid: CharWithStats = {
           ...char,
+          race: Races[char.raceID],
+          alignment: Alignment[char.alignID],
           stats: buildCharStats(stats),
           saves: buildCharSaves(saves),
         }

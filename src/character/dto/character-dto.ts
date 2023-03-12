@@ -2,6 +2,7 @@ import { IsBoolean, IsDate, IsInt, IsOptional, IsString } from "class-validator"
 import { Expose } from "class-transformer";
 import { DefinedStats } from "src/stat/dto/stat-dto";
 import { DefinedSaves } from "src/saves/dto/saves-dto";
+import { Alignment } from "src/enum/alignments";
 
 export class CharactersDto {
   @IsInt()
@@ -158,11 +159,11 @@ export class CharWithStats {
   CharXP: number;
   
   @Expose()
-  raceID: number;
+  race: string;
   
   @Expose()
-  alignID: number;
-  
+  alignment: string
+
   @Expose()
   init: number;
   
