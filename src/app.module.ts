@@ -17,6 +17,8 @@ import { ToHitModule } from './to-hit/to-hit.module';
 import { EquipmentModule } from './equipment/equipment.module';
 import { SpellsModule } from './spells/spells.module';
 import { ExpendableModule } from './expendable/expendable.module';
+import { FeatModule } from './feat/feat.module';
+import { LevelsModule } from './levels/levels.module';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -48,6 +50,8 @@ const cookieSession = require('cookie-session');
     EquipmentModule,
     SpellsModule,
     ExpendableModule,
+    FeatModule,
+    LevelsModule,
     // TypeOrmModule.forRoot({
       //   type: 'sqlite',
       //   database: 'db.sqlite',

@@ -2,27 +2,22 @@ import {
     IsBoolean,
     IsDate,
     IsInt,
-    IsString,
   } from 'class-validator';
   import { Column, Entity, PrimaryColumn } from 'typeorm';
   
   @Entity()
-  export class Skills {
+  export class Charfeats {
     @PrimaryColumn()
     @IsInt()
-    skillID: number;
+    id: number;
   
     @Column()
-    @IsString()
-    skillName: string;
+    @IsInt()
+    featID: number;;
   
     @Column()
-    @IsString()
-    skillDesc: string;
-  
-    @Column()
-    @IsBoolean()
-    untrained: boolean;
+    @IsInt()
+    charID: number;
   
     @Column()
     @IsDate()
