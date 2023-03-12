@@ -16,6 +16,8 @@ import { Charfeats } from "./feat/char-feat.entity";
 import { Charlevels } from "./levels/levels.entity";
 import { Acs } from "./armor/armor.entity";
 import { Charac } from "./armor/char-armor.entity";
+import { Charnotes } from "./notes/char-notes";
+import { Noteitems } from "./notes/notes.entity";
 
 dotenv.config();  
 export const AppDataSource = new DataSource({
@@ -42,6 +44,8 @@ export const AppDataSource = new DataSource({
     Charlevels,
     Acs,
     Charac,
+    Charnotes,
+    Noteitems,
   ]
   
 });

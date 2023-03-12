@@ -20,6 +20,7 @@ import { ExpendableModule } from './expendable/expendable.module';
 import { FeatModule } from './feat/feat.module';
 import { LevelsModule } from './levels/levels.module';
 import { ArmorModule } from './armor/armor.module';
+import { NotesModule } from './notes/notes.module';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -54,6 +55,7 @@ const cookieSession = require('cookie-session');
     FeatModule,
     LevelsModule,
     ArmorModule,
+    NotesModule,
     // TypeOrmModule.forRoot({
       //   type: 'sqlite',
       //   database: 'db.sqlite',
