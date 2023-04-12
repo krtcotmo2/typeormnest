@@ -11,6 +11,7 @@ import { StatService } from 'src/stat/stat.service';
 import { Repository } from 'typeorm';
 import { Characters } from './characters.entity';
 import { CharWithStats, SaveCharactersDto, UpdateCharactersDto } from './dto/character-dto';
+import { SkillService } from 'src/skill/skill.service';
 
 
 @Injectable()
@@ -18,7 +19,8 @@ export class CharacterService {
   constructor( 
     @InjectRepository(Characters) private repo: Repository<Characters>,
     private statService: StatService,
-    private saveService: SavesService
+    private saveService: SavesService,
+    private skillService: SkillService,
   ){}
 
   getCharacter(id:string): Observable<Characters> {
@@ -43,8 +45,9 @@ export class CharacterService {
     const char =  this.getCharacter(id);
     const stats =  this.statService.getCharStats(id);
     const saves =  this.saveService.getCharSaves(+id);
-    return forkJoin([char, stats, saves]).pipe( 
-      switchMap( ([char, stats, saves]) => {
+    const skills = this.skillService.getCharSkills(id);
+    return forkJoin([char, stats, saves, skills]).pipe( 
+      switchMap( ([char, stats, saves, skills]) => {
         if(!char){
           throw new NotFoundException("Character Not Found");
         }
@@ -54,6 +57,7 @@ export class CharacterService {
           alignment: Alignment[char.alignID],
           stats: buildCharStats(stats),
           saves: buildCharSaves(saves),
+          skills: skills,
         }
         return of(hybrid);
       }) 

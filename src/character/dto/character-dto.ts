@@ -3,6 +3,7 @@ import { Expose } from "class-transformer";
 import { DefinedStats } from "src/stat/dto/stat-dto";
 import { DefinedSaves } from "src/saves/dto/saves-dto";
 import { Alignment } from "src/enum/alignments";
+import { DefinedSKill } from "src/skill/dto/skills-dto";
 
 export class CharactersDto {
   @IsInt()
@@ -178,4 +179,7 @@ export class CharWithStats {
 
   @Expose()
   saves: DefinedSaves;
+
+  @Expose()
+  skills: DefinedSKill[];
 }

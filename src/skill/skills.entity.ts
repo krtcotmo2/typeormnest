@@ -20,6 +20,14 @@ export class Charskills extends Modifier {
 
   @Column()
   @IsBoolean()
+  pinned: boolean;
+  
+  @Column()
+  @IsBoolean()
+  isClassSkill: boolean;
+
+  @Column()
+  @IsBoolean()
   isRanks: boolean;
   
 }
