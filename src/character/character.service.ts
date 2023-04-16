@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { forkJoin, from, map, Observable, of, switchMap } from 'rxjs';
+import { catchError, forkJoin, from, map, Observable, of, switchMap } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
 import { Alignment } from 'src/enum/alignments';
 import { Races } from 'src/enum/races';
@@ -12,15 +12,19 @@ import { Repository } from 'typeorm';
 import { Characters } from './characters.entity';
 import { CharWithStats, SaveCharactersDto, UpdateCharactersDto } from './dto/character-dto';
 import { SkillService } from 'src/skill/skill.service';
+import { Charskills } from 'src/skill/skills.entity';
+import { LevelsService } from 'src/levels/levels.service';
 
 
 @Injectable()
 export class CharacterService {
   constructor( 
-    @InjectRepository(Characters) private repo: Repository<Characters>,
+    @InjectRepository(Characters) 
+    private repo: Repository<Characters>,
     private statService: StatService,
     private saveService: SavesService,
-    private skillService: SkillService,
+    private skillService: SkillService, 
+    private levelsService: LevelsService
   ){}
 
   getCharacter(id:string): Observable<Characters> {
@@ -33,6 +37,35 @@ export class CharacterService {
       })
     );
   }
+
+  getCharacters(): Observable<Characters[]> {
+    return from(AppDataSource.manager.find(Characters, {
+      order: {
+        isDead: 'ASC',
+        charName: 'ASC',
+      }
+    })).pipe(
+      map( (chars) => chars)
+    )
+  }
+
+  getCharactersWithLevels(): Observable<Characters[]> {
+    const chars =  this.getCharacters();
+    const lvls = this.levelsService.getAllCharLevels()
+    return forkJoin([chars, lvls]).pipe( 
+      switchMap( ([chars, lvls]) => {
+        const nChars:Characters[] = chars.map( char => {
+            return {
+              ...char,
+              levels: lvls.filter(lvl => lvl.charID === char.charID)
+            }
+          })
+        return of(nChars);
+      })
+    );
+  }
+
+  
 
   getEnv(){
     return {
@@ -47,6 +80,10 @@ export class CharacterService {
     const saves =  this.saveService.getCharSaves(+id);
     const skills = this.skillService.getCharSkills(id);
     return forkJoin([char, stats, saves, skills]).pipe( 
+      catchError(err => {
+        console.log(err)
+       throw err;
+      }),
       switchMap( ([char, stats, saves, skills]) => {
         if(!char){
           throw new NotFoundException("Character Not Found");
@@ -60,7 +97,8 @@ export class CharacterService {
           skills: skills,
         }
         return of(hybrid);
-      }) 
+      }), 
+      
     );
   }
 

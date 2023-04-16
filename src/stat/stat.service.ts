@@ -15,7 +15,7 @@ export class StatService {
     })).pipe(
       switchMap( statList => {
         if(statList.length < 1){
-          errorHandler(new NotFoundException('Stats not found for user'));
+          errorHandler(new NotFoundException('stat_not_found'));
         }
         return of(statList);
       }),
@@ -29,7 +29,7 @@ export class StatService {
       statID: +statId,
     });
     if (stat.length === 0) {
-      throw new NotFoundException('Stat Not Found');
+      throw new NotFoundException('stat_not_found');
     }
     return stat;
   }

@@ -7,11 +7,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Charsaves } from './saves.entity';
 import { StatService } from 'src/stat/stat.service';
 import { SkillService } from 'src/skill/skill.service';
+import { Charlevels } from 'src/levels/levels.entity';
+import { LevelsService } from 'src/levels/levels.service';
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Charsaves, Characters]),
+    TypeOrmModule.forFeature([Charsaves, Characters, Charlevels]),
   ],
-  providers: [SavesService, CharacterService, StatService, SkillService],
+  providers: [SavesService, CharacterService, StatService, SkillService, LevelsService],
   controllers: [SavesController]
 })
 export class SavesModule {}

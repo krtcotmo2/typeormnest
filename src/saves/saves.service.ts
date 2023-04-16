@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { from } from 'rxjs';
+import { catchError, from, map } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
 import { CreateSavesDto, UpdateSavesDto } from './dto/saves-dto';
 import { Charsaves } from './saves.entity';

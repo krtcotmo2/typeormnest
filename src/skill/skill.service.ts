@@ -8,7 +8,14 @@ import { Charskills } from './skills.entity';
 export class SkillService {
 
   getCharSkills(charId: string) {
-    const charSkill = AppDataSource.manager.findBy(Charskills, {charID: +charId,})
+    const charSkill = AppDataSource.manager.find(Charskills, {
+      where: [{charID: +charId,}],
+      order: {
+        skillID: 'DESC',
+
+      }
+      
+    })
     const skill = AppDataSource.manager.find(Skills, {});
     return forkJoin([charSkill, skill]).pipe(
       switchMap( ([charSkill, skill]) => {
@@ -18,7 +25,7 @@ export class SkillService {
             skillName: skill.find(skill => skill.skillID === cSkill.skillID).skillName
           }
         })
-        .sort((val1, val2) => val1.skillID < val2.skillID ? -1 : 1);
+        .sort((val1, val2) => val1.skillName < val2.skillName ? -1 : 1);
        return of(allSkills);
       }),
       

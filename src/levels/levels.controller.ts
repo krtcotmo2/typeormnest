@@ -9,4 +9,9 @@ export class LevelsController {
     getCharLevels(@Param('charId') charId: string){
         return this.levelService.getCharLevels(charId);
     }
+
+    @Get('/all')
+    getAllCharLevels(){
+        return this.levelService.getAllCharLevels();
+    }
 }

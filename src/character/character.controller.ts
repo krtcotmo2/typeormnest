@@ -21,11 +21,24 @@ export class CharacterController {
     return this.characterService.getCharacterWithStats(id);
   }
 
+  @Get('/with-levels')
+  getCharactersWith(): Observable<Characters[]>{
+    return this.characterService.getCharactersWithLevels();
+  }
+
   @Get('/:id')
   @Serialize(baseChar) 
-  getCharacter(@Param('id') id: string){
+  getCharacter(@Param('id') id: string): Observable<Characters>{
     return this.characterService.getCharacter(id);
+
   }
+
+  @Get('')
+  getCharacters(): Observable<Characters[]>{
+    return this.characterService.getCharacters();
+  }
+
+
 
   @Post('/create')
   @Serialize(Characters)

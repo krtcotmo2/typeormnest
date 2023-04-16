@@ -19,4 +19,12 @@ export class LevelsService {
         );
     }
 
+    getAllCharLevels(){
+        return from(AppDataSource.manager.find(Charlevels)).pipe(
+            map( levels => {
+                return updateListWithClassName(levels);
+            })
+        );
+    }
+
 }
