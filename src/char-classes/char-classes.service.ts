@@ -11,9 +11,9 @@ export class CharClassesService {
         return from(AppDataSource.manager.find(CharClasses));
     }
 
-    getClassesForLimited(str){
+    getClassesForLimited(str: string[]){
         return from(AppDataSource.manager.findBy(CharClasses, {
-            classID: In(str.split(','))
+            classID: In(str)
         }));
     }
 }

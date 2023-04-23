@@ -9,12 +9,14 @@ import { SavesService } from 'src/saves/saves.service';
 import { SkillService } from 'src/skill/skill.service';
 import { Charlevels } from 'src/levels/levels.entity';
 import { LevelsService } from 'src/levels/levels.service';
+import { CharClassesDTO } from 'src/char-classes/dto/char-classes-dto';
+import { CharClassesService } from 'src/char-classes/char-classes.service';
 
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Charstats, Characters, Charlevels]),
+    TypeOrmModule.forFeature([Charstats, Characters, Charlevels, CharClassesDTO]),
   ],
-  providers: [StatService, CharacterService, SavesService, SkillService, LevelsService],
+  providers: [StatService, CharacterService, SavesService, SkillService, LevelsService, CharClassesService],
   controllers: [StatController]
 })
 export class StatModule {}

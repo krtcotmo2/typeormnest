@@ -21,8 +21,14 @@ export class CharacterController {
     return this.characterService.getCharacterWithStats(id);
   }
 
+  @Get('/with-calc-stats/:id')
+  //@Serialize(CharWithStats) 
+  getCharacterWithCalcStats(@Param('id') id: string): Observable<CharWithStats>{
+    return this.characterService.getCharacterWithCalcStats(id);
+  }
+
   @Get('/with-levels')
-  getCharactersWith(): Observable<Characters[]>{
+  getCharactersWithLevels(): Observable<Characters[]>{
     return this.characterService.getCharactersWithLevels();
   }
 

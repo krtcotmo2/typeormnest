@@ -4,7 +4,7 @@ import { catchError, forkJoin, from, map, Observable, of, switchMap } from 'rxjs
 import { AppDataSource } from 'src/app-data-source';
 import { Alignment } from 'src/enum/alignments';
 import { Races } from 'src/enum/races';
-import { buildCharSaves } from 'src/saves/business-logic/saves-helper';
+import { calcSaves } from 'src/saves/business-logic/saves-helper';
 import { SavesService } from 'src/saves/saves.service';
 import { buildCharStats } from 'src/stat/business-logic/stat-helper';
 import { StatService } from 'src/stat/stat.service';
@@ -12,8 +12,10 @@ import { Repository } from 'typeorm';
 import { Characters } from './characters.entity';
 import { CharWithStats, SaveCharactersDto, UpdateCharactersDto } from './dto/character-dto';
 import { SkillService } from 'src/skill/skill.service';
-import { Charskills } from 'src/skill/skills.entity';
 import { LevelsService } from 'src/levels/levels.service';
+import { CharClassesService } from 'src/char-classes/char-classes.service';
+import {calcSavesAndHitsForEachClass } from 'src/char-classes/transformers/transform-char-class-data';
+import { DefinedSaves } from 'src/saves/dto/saves-dto';
 
 
 @Injectable()
@@ -24,7 +26,8 @@ export class CharacterService {
     private statService: StatService,
     private saveService: SavesService,
     private skillService: SkillService, 
-    private levelsService: LevelsService
+    private levelsService: LevelsService,
+    private charClassService: CharClassesService,
   ){}
 
   getCharacter(id:string): Observable<Characters> {
@@ -65,8 +68,6 @@ export class CharacterService {
     );
   }
 
-  
-
   getEnv(){
     return {
       mode: process.env.NODE_ENV,
@@ -93,12 +94,63 @@ export class CharacterService {
           race: Races[char.raceID],
           alignment: Alignment[char.alignID],
           stats: buildCharStats(stats),
-          saves: buildCharSaves(saves),
+          saves: new DefinedSaves(),
           skills: skills,
         }
         return of(hybrid);
       }), 
       
+    );
+  }
+
+  getCharacterWithCalcStats(id:string): Observable<CharWithStats> {
+    const char =  this.getCharacter(id);
+    const stats =  this.statService.getCharStats(id);
+    const saves =  this.saveService.getCharSaves(+id);
+    const skills = this.skillService.getCharSkills(id);
+    const levels = this.levelsService.getCharLevels(id);
+    let charClassIds, charLevels
+
+    return levels.pipe(
+      switchMap((retrievedLevels) => {
+        charClassIds = retrievedLevels.map(lvl => lvl.classID.toString());
+        charLevels = retrievedLevels.map(lvl => lvl.classLevel.toString());
+        return this.charClassService.getClassesForLimited(charClassIds);
+      }),
+      switchMap((classStats) => {
+        return forkJoin([char, stats, saves, skills]).pipe( 
+          catchError(err => {
+            console.log(err)
+           throw err;
+          }),
+          switchMap( ([char, stats, saves, skills]) => {
+            if(!char){
+              throw new NotFoundException("Character Not Found");
+            }
+            const transformedLevels = calcSavesAndHitsForEachClass(classStats , charClassIds, charLevels);
+            const charStats = buildCharStats(stats);
+            const charSaves = calcSaves(transformedLevels, charStats, saves);
+            
+            const hybrid = {
+              ...char,
+              race: Races[char.raceID],
+              alignment: Alignment[char.alignID],
+              stats: charStats,
+              saves: charSaves,
+              skills: skills,
+              levels: transformedLevels.map(lvl => {
+                return {
+                  class: lvl.class,
+                  level: lvl.level,
+                  toHit: lvl.toHit
+                }
+              }),
+            }
+            return of(hybrid);
+          }), 
+          
+        );
+      })
     );
   }
 
