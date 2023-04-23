@@ -15,7 +15,8 @@ export class StatService {
     })).pipe(
       switchMap( statList => {
         if(statList.length < 1){
-          errorHandler(new NotFoundException('stat_not_found'));
+          return of([])
+          //errorHandler(new NotFoundException('stat_not_found'));
         }
         return of(statList);
       }),
