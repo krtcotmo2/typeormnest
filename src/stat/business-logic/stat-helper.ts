@@ -9,7 +9,7 @@ export const getValues = (arr: any[]) => {
       return {
         id: stat.id,
         score: stat.score,
-        type: stat.isBase ? StatType.BASE : StatType.MODIFIER,
+        type: stat.isBase ? StatType.BASE : !stat.isMod ? StatType.TEMPORARY: StatType.MODIFIER,
         modDesc: stat.modDesc,
       };
     }),

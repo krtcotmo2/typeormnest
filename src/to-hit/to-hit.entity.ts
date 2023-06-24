@@ -34,4 +34,8 @@ export class Chartohits extends Modifier {
   @Column()
   @IsBoolean()
   isBase: boolean;
+
+  @Column()
+  @IsBoolean()
+  pinned: boolean;
 }

@@ -62,7 +62,7 @@ export class StatController {
           charId.toString(),
         );
       }),
-      map((char) => of(char)),
+      map((char) => JSON.stringify(char)),
     );
   }
 
@@ -73,7 +73,7 @@ export class StatController {
       switchMap(() => {
         return this.characterService.getCharacterWithStats(charId);
       }),
-      map((char) => JSON.stringify(char)),
+      map((char) => JSON.stringify(char) ),
     );
   }
 }

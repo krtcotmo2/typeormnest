@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable, NotFoundException, forwardRef } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { catchError, forkJoin, from, map, Observable, of, switchMap } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
@@ -21,7 +21,8 @@ import { DefinedSaves } from 'src/saves/dto/saves-dto';
 @Injectable()
 export class CharacterService {
   constructor( 
-    @InjectRepository(Characters) 
+    @InjectRepository(Characters)
+    @Inject(forwardRef(() => SavesService)) 
     private repo: Repository<Characters>,
     private statService: StatService,
     private saveService: SavesService,
@@ -89,15 +90,8 @@ export class CharacterService {
         if(!char){
           throw new NotFoundException("Character Not Found");
         }
-        const hybrid: CharWithStats = {
-          ...char,
-          race: Races[char.raceID],
-          alignment: Alignment[char.alignID],
-          stats: buildCharStats(stats),
-          saves: new DefinedSaves(),
-          skills: skills,
-        }
-        return of(hybrid);
+        // const hybrid: CharWithStats = this.getCharacterWithCalcStats(char.charID.toString())
+        return this.getCharacterWithCalcStats(char.charID.toString());
       }), 
       
     );
@@ -140,13 +134,13 @@ export class CharacterService {
               skills: skills,
               levels: transformedLevels.map(lvl => {
                 return {
-                  class: lvl.class,
-                  level: lvl.level,
+                  className: lvl.class,
+                  classLevel: lvl.level,
                   toHit: lvl.toHit
                 }
               }),
             }
-            return of(hybrid);
+              return of(hybrid);
           }), 
           
         );

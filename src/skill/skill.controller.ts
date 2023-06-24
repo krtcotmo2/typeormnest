@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { DefaultSkill } from './dto/skills-dto';
 import { SkillService } from './skill.service';
@@ -15,5 +15,14 @@ export class SkillController {
     getCharSkills(@Param('charId') charId: string){
         return this.skillService.getCharSkills(charId);
     }
+    
+    @Put('/char/:charId/pin/:skillId')
+    pinSkill(@Param('skillId') skillId: string, @Param('charId') charId: string){
+        return this.skillService.pinSkill(charId, skillId);
+    }
 
+    @Put('/char/:charId/unpin/:skillId')
+    unpinSkill(@Param('skillId') skillId: string, @Param('charId') charId: string){
+        return this.skillService.unpinSkill(charId, skillId);
+    }
 }

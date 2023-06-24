@@ -31,4 +31,28 @@ export class SkillService {
       
     );
   }
+
+  pinSkill(charId: string, skillId: string){
+    return AppDataSource.manager.update(Charskills, 
+      {
+        skillID: skillId,
+        charID: charId
+      },
+      {
+        pinned: true
+      }
+    )
+  }
+
+  unpinSkill(charId: string, skillId: string){
+    return AppDataSource.manager.update(Charskills, 
+      {
+        skillID: skillId,
+        charID: charId
+      },
+      {
+        pinned: false
+      }
+    )
+  }
 }

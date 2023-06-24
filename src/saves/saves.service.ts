@@ -1,11 +1,16 @@
-import { Injectable } from '@nestjs/common';
-import { catchError, from, map } from 'rxjs';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { catchError, from, map, of, switchMap } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
 import { CreateSavesDto, UpdateSavesDto } from './dto/saves-dto';
 import { Charsaves } from './saves.entity';
+import { CharacterService } from 'src/character/character.service';
 
 @Injectable()
 export class SavesService {
+    constructor(
+        @Inject(forwardRef(() => CharacterService))
+       private charService: CharacterService,
+    ){}
 
     getCharSaves(id :number){
         return from(AppDataSource.manager.findBy(Charsaves, {charID: id}))

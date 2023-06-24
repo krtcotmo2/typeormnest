@@ -21,7 +21,11 @@ export class ToHitService {
                     return {
                       ...tohit,
                       hitName: singleLine.toHitDesc,
-                      hitOrder: singleLine.toHitOrder
+                      hitOrder: singleLine.toHitOrder,
+                      isMelee: singleLine.isMelee,
+                      damage: singleLine.damage,
+                      critRange: singleLine.critRange,
+                      critDamage: singleLine.critDamage,
                     }
                   })
                 .sort((val1, val2) => val1.hitOrder < val2.hitOrder ? -1 : 1);
@@ -30,4 +34,28 @@ export class ToHitService {
         )
         
     }
+
+    pinHit(charId: string, hitId: string){
+        return AppDataSource.manager.update(Chartohits, 
+          {
+            toHitID: hitId,
+            charID: charId
+          },
+          {
+            pinned: true
+          }
+        )
+      }
+    
+      unpinHit(charId: string, hitId: string){
+        return AppDataSource.manager.update(Chartohits, 
+          {
+            toHitID: hitId,
+            charID: charId
+          },
+          {
+            pinned: false
+          }
+        )
+      }
 }

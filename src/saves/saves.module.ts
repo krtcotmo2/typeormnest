@@ -13,7 +13,12 @@ import { CharClassesService } from 'src/char-classes/char-classes.service';
 import { CharClassesDTO } from 'src/char-classes/dto/char-classes-dto';
 @Module({
   imports:[
-    TypeOrmModule.forFeature([Charsaves, Characters, Charlevels, CharClassesDTO]),
+    TypeOrmModule.forFeature([
+      Charsaves, 
+      Characters, 
+      Charlevels, 
+      CharClassesDTO
+    ]),
   ],
   providers: [SavesService, CharacterService, StatService, SkillService, LevelsService,CharClassesService],
   controllers: [SavesController]

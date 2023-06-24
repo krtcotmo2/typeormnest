@@ -32,6 +32,10 @@ export class Tohits{
   critDamage: string;
 
   @Column()
+  @IsString()
+  isMelee: boolean;
+
+  @Column()
   @IsDate()
   createdAt: Date;
 
