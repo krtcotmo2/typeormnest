@@ -1,13 +1,13 @@
 import { Injectable, NestMiddleware } from "@nestjs/common";
 import { Request, Response, NextFunction } from "express";
 import { UserService } from "../user.service";
-import { User } from "../user.entity";
+import { Users } from "../user.entity";
 
 
 declare global{
   namespace Express{
     interface Request{
-      currentUser?: User;
+      currentUser?: Users;
     }
   }
 }

@@ -19,6 +19,7 @@ import { Charac } from "./armor/char-armor.entity";
 import { Charnotes } from "./notes/char-notes";
 import { Noteitems } from "./notes/notes.entity";
 import { CharClasses} from "./char-classes/char-classes.entity";
+import { Users } from './user/user.entity'
 
 dotenv.config();  
 export const AppDataSource = new DataSource({
@@ -47,7 +48,8 @@ export const AppDataSource = new DataSource({
     Charac,
     Charnotes,
     Noteitems,
-    CharClasses
+    CharClasses,
+    Users
   ]
   
 });

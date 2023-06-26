@@ -4,19 +4,19 @@ import { IsBoolean, IsEmail, IsInt, IsOptional, IsString } from "class-validator
 
 export class CreateUserDto {
   @IsString()
-  username: string;
+  userName: string;
   
   @IsString()
-  password: string;
+  userPassword: string;
   
   @IsOptional()
   @IsEmail()
   @IsString()
-  email: string;
+  userEmail: string;
 
-  @IsOptional()
-  @IsInt()
-  age: number
+  // @IsOptional()
+  // @IsInt()
+  // age: number
 }
 
 export class UpdateUserDto {
@@ -31,7 +31,7 @@ export class UpdateUserDto {
 
   @IsOptional()
   @IsString()
-  username: string;
+  userName: string;
 
   @IsOptional()
   @IsInt()

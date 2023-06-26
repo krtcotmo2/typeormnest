@@ -31,13 +31,13 @@ export class UserController {
   @Post('/signup')
   async create(@Body() body: CreateUserDto, @Session() session: any) {
     const user = await this.authService.signup(
-      body.username,
-      body.password,
-      body.email,
+      body.userName,
+      body.userPassword,
+      body.userEmail,
       ).catch(err => {
         throw err;
       });
-    session.userId = user.id;
+    session.userId = user.userID;
     return user;
   }
 
@@ -46,7 +46,7 @@ export class UserController {
     const user = await  this.authService.validateUser(body).catch(err => {
       throw err;
     });
-    session.userId = user.id;
+    session.userId = user.userID;
     return user;
   }
 

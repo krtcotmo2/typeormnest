@@ -25,25 +25,24 @@ export class AuthService {
       const hash = await (scrypt(password, salt, 32)) as Buffer;
       // return new user if unique
       const user: CreateUserDto = {
-        password: hash.toString('hex'),
-        username,
-        email,
-        age:undefined,
+        userPassword: hash.toString('hex'),
+        userName: username,
+        userEmail: email,
       }
-      const newUser = await this.userService.create(user.email, user.username, user.password);
+      const newUser = await this.userService.create(user.userEmail, user.userName, user.userPassword);
       return newUser;
     }
 
   async validateUser(user: CreateUserDto) {
-    const hash = await (scrypt(user.password, salt, 32)) as Buffer;
+    const hash = await (scrypt(user.userPassword, salt, 32)) as Buffer;
     const authenticatedUser = await this.userService.validateUser({
       ...user,
-      password:hash.toString('hex')
+      userPassword:hash.toString('hex')
     });
     if(!authenticatedUser){
       throw new BadRequestException('User Not Found');
     }
-    if(authenticatedUser?.password !== hash.toString('hex')){
+    if(authenticatedUser?.userPassword !== hash.toString('hex')){
       throw new BadRequestException('Invalid credentials');
     }
     return authenticatedUser;

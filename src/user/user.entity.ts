@@ -4,35 +4,35 @@ import { Exclude } from "class-transformer";
 import { Report } from "src/report/report.entity";
 
 @Entity()
-export class User {
+export class Users {
   @PrimaryGeneratedColumn()
-  id: number;
+  userID: number;
 
   @Column()
   @IsEmail()
-  email: string;
+  userEmail: string;
   
   @Column()
   @IsString()
   @Exclude()
   //exclude is universal and can never be called back in a response so not good if you want to hide 
-  password: string;
+  userPassword: string;
 
-  @OneToMany( () => Report, (report) => report.user )
-  reports: Report[];
+  // @OneToMany( () => Report, (report) => report.user )
+  // reports: Report[];
 
   @Column()
   @IsString()
-  username: string;
+  userName: string;
 
-  @Column({default: false})
-  @IsBoolean()
-  administrator: boolean;
+  // @Column({default: false})
+  // @IsBoolean()
+  // administrator: boolean;
 
   // demo of sensitive info filtered by custom interceptor.
-  @Column({ type: 'int', nullable: true})
-  @IsInt()
-  age: number;
+  // @Column({ type: 'int', nullable: true})
+  // @IsInt()
+  // age: number;
 
 
 
@@ -40,27 +40,27 @@ export class User {
   /***** LOGGERS FOR EVENTS *****/
   @BeforeInsert()
   logPreInsert(){
-    console.log('Attempting to insert', this.username);
+    console.log('Attempting to insert', this.userName);
   }
   @AfterInsert()
   logInserted(){
-    console.log('Successfully added', this.username, 'with id', this.id);
+    console.log('Successfully added', this.userName, 'with id', this.userID);
   }
   @BeforeUpdate()
   logPreUpdate(){
-    console.log('Attempting to update', this.username, 'with id', this.id);
+    console.log('Attempting to update', this.userName, 'with id', this.userID);
   }
   @AfterUpdate()
   logUpdated(){
-    console.log('Successfully updated', this.username, 'with id', this.id);
+    console.log('Successfully updated', this.userName, 'with id', this.userID);
   }
   @BeforeRemove()
   logPreRemove(){
-    console.log('Attempting to delete', this.username);
+    console.log('Attempting to delete', this.userName);
   }
   @AfterRemove()
   logRemoved(){
-    console.log('Successfully deleted', this.username, 'with id', this.id);
+    console.log('Successfully deleted', this.userName, 'with id', this.userID);
   }
 
 

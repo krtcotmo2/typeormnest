@@ -15,7 +15,7 @@ import { ApproverReportDto, CreateReportDto, EstimateDto, ReportDto } from './dt
 import { ReportService } from './report.service';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
-import { User } from 'src/user/user.entity';
+import { Users } from 'src/user/user.entity';
 import { AdminGuard } from 'src/guards/admin.guard';
 
 @Controller('api/report')
@@ -27,7 +27,7 @@ export class ReportController {
   @Post()
   @UseGuards(AuthGuard)
   @Serialize(ReportDto)
-  async create(@Body() body: CreateReportDto, @CurrentUser() user: User){
+  async create(@Body() body: CreateReportDto, @CurrentUser() user: Users){
     const report = this.reportService.create(body, user).catch( err => {
       throw err;
     })

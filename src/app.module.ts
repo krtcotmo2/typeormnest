@@ -5,7 +5,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Report } from './report/report.entity';
 import { ReportModule } from './report/report.module';
-import { User } from './user/user.entity';
+import { Users } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CharacterModule } from './character/character.module';
@@ -40,7 +40,7 @@ const cookieSession = require('cookie-session');
           type: 'sqlite',
           database: 'db.sqlite',
           //database: config.get<string>('DB_NAME'),
-          entities: [User, Report],
+          entities: [Users, Report],
           synchronize: false,
           autoLoadEntities: true,
         }
@@ -58,12 +58,6 @@ const cookieSession = require('cookie-session');
     ArmorModule,
     NotesModule,
     CharClassesModule,
-    // TypeOrmModule.forRoot({
-      //   type: 'sqlite',
-      //   database: 'db.sqlite',
-      //   entities: [User, Report],
-      //   synchronize: true,
-      // })
     ],
     controllers: [AppController],
     providers: [

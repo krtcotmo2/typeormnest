@@ -2,12 +2,12 @@ import { BadRequestException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthService } from './auth.service';
 import { CreateUserDto } from './dto/user-dtos';
-import { User } from './user.entity';
+import { Users } from './user.entity';
 import { UserService } from './user.service';
 import { scrypt as _scrypt} from 'crypto';
 
 
-const users = [] as User[];
+const users = [] as Users[];
 describe('Auth service', () => {
   let fakeUserService: Partial<UserService>, module: TestingModule, service: AuthService
   beforeEach( async () => {
@@ -22,16 +22,16 @@ describe('Auth service', () => {
     // more realistic;
     fakeUserService = {
       create: (email: string, username: string, password: string) => {
-        const user = {id: Math.floor(Math.random() * 99999), email, username, password} as User;
+        const user = {userID: Math.floor(Math.random() * 99999), userEmail: email, userName: username, userPassword: password} as Users;
         users.push(user);
         return Promise.resolve(user);
       },
       validateUser: (user: CreateUserDto) => {
-        const validatedUser = users.find(aUser => aUser.password === user.password && aUser.username === user.username);
+        const validatedUser = users.find(aUser => aUser.userPassword === user.userPassword && aUser.userName === user.userName);
         return Promise.resolve(validatedUser);
       },
       searchForDuplicateUser: (username: string, email: string) => {
-        const existingUser = users.filter(user => user.username === username && user.email === email) as User[]; 
+        const existingUser = users.filter(user => user.userName === username && user.userEmail === email) as Users[]; 
         if(existingUser.length> 0 ){
           throw new BadRequestException();
         }
@@ -60,17 +60,17 @@ describe('Auth service', () => {
     const username = 'kurt-soft';
     const email = 'kurt.cooney@softvision.com'
     const a = await service.signup(username, 'fff', email);
-    expect(a.username).toBe(username);
-    expect(a.email).toBe(email);
-    expect(a.id).toBeGreaterThan(0);
+    expect(a.userName).toBe(username);
+    expect(a.userEmail).toBe(email);
+    expect(a.userID).toBeGreaterThan(0);
   })
 
   it('hashes the password during creation', async() => {
     //fakeUserService.create =  (email: string, username: string, password: string) => Promise.resolve({id:16, username, email, password} as User);
     const user = await service.signup('kurtHash', 'fff', 'kurtHash@softvision.com');
-    expect(user.password).not.toBe('fff');
-    expect(user.email).toBe('kurtHash@softvision.com');
-    expect(user.username).toBe('kurtHash');
+    expect(user.userPassword).not.toBe('fff');
+    expect(user.userEmail).toBe('kurtHash@softvision.com');
+    expect(user.userName).toBe('kurtHash');
   })
 
   it('Will prevent a user from being created if the username and email are already used', async() => {
@@ -105,28 +105,28 @@ describe('Auth service', () => {
     const thePassword = 'fff';
     const theEmail = 'kurt@me.com';
     fakeUserService.create = (email: string, username: string, password: string) => Promise.resolve({
-      id:1, 
-      username, email, 
-      password
-    } as User);
+      userID:1, 
+      userName: username, 
+      userEmail: email, 
+      userPassword: password
+    } as Users);
     fakeUserService.validateUser = (user: CreateUserDto) => Promise.resolve({ 
-        id: 1, 
-        email:'kurt@me.com', 
-        username:newUser.username, 
-        password: newUser.password
-      } as User);
+        userID: 1, 
+        userEmail:'kurt@me.com', 
+        userName:newUser.userName, 
+        userPassword: newUser.userPassword
+      } as Users);
 
     const newUser = await service.signup(username, thePassword, theEmail);
     const validatedUser = await service.validateUser({
-        username: username,
-        password: thePassword,
-        email: undefined,
-        age: undefined,
+        userName: username,
+        userPassword: thePassword,
+        userEmail: undefined,
       });
       expect(validatedUser).toBeDefined();
-      expect(validatedUser.username).toBe(username);
-      expect(validatedUser.id).toBe(1);
-      expect(validatedUser.email).toBe(theEmail)
+      expect(validatedUser.userName).toBe(username);
+      expect(validatedUser.userID).toBe(1);
+      expect(validatedUser.userEmail).toBe(theEmail)
   });
 
   it('Will validate a user with valid password using array of stored values', async() => {
@@ -136,23 +136,21 @@ describe('Auth service', () => {
     
     await service.signup(username, thePassword, theEmail);
     const validatedUser = await service.validateUser({
-        username: username,
-        password: thePassword,
-        email: undefined,
-        age: undefined,
+        userName: username,
+        userPassword: thePassword,
+        userEmail: undefined,
       });
       expect(validatedUser).toBeDefined();
-      expect(validatedUser.username).toBe(username);
-      expect(validatedUser.id).toBeGreaterThan(0);
-      expect(validatedUser.email).toBe(theEmail)
+      expect(validatedUser.userName).toBe(username);
+      expect(validatedUser.userID).toBeGreaterThan(0);
+      expect(validatedUser.userEmail).toBe(theEmail)
   });
 
   it('Will throw error if a user is not found', async() => {
     await expect(service.validateUser({
-      username: 'krtcotmo800',
-      password: 'bbb',
-      email: undefined,
-      age: undefined,
+      userName: 'krtcotmo800',
+      userPassword: 'bbb',
+      userEmail: undefined,
     }))
       .rejects.toThrow(BadRequestException);
     
@@ -165,10 +163,9 @@ describe('Auth service', () => {
     
     await service.signup(username, password, email);
     await expect( service.validateUser({
-      username ,
-      password: 'nothing similar',
-      email: undefined,
-      age: undefined,
+      userName: username ,
+      userPassword: 'nothing similar',
+      userEmail: undefined,
     })).rejects.toThrow(BadRequestException);
   })
 })

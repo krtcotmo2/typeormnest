@@ -80,7 +80,7 @@ export class CharacterService {
     const char =  this.getCharacter(id);
     const stats =  this.statService.getCharStats(id);
     const saves =  this.saveService.getCharSaves(+id);
-    const skills = this.skillService.getCharSkills(id);
+    const skills = this.skillService.getCharPinnedSkills(id);
     return forkJoin([char, stats, saves, skills]).pipe( 
       catchError(err => {
         console.log(err)
@@ -101,7 +101,7 @@ export class CharacterService {
     const char =  this.getCharacter(id);
     const stats =  this.statService.getCharStats(id);
     const saves =  this.saveService.getCharSaves(+id);
-    const skills = this.skillService.getCharSkills(id);
+    const skills = this.skillService.getCharPinnedSkills(id);
     const levels = this.levelsService.getCharLevels(id);
     let charClassIds, charLevels
 
