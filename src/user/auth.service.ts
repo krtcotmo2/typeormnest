@@ -3,7 +3,10 @@ import { UserService } from './user.service';
 import * as dotenv from "dotenv";
 import { scrypt as _scrypt} from 'crypto';
 import { promisify } from 'util';
-import { CreateUserDto } from './dto/user-dtos';
+import { CreateUserDto, LoginUserDto } from './dto/user-dtos';
+import { from, of } from 'rxjs';
+import { createPassword, emailedPassword } from './auth-helper';
+import { Users } from './user.entity';
 
 const scrypt = promisify(_scrypt);
 
@@ -19,7 +22,7 @@ export class AuthService {
     
   async signup(username: string, password: string, email: string) {
       // make user username is unique
-      await this.userService.searchForDuplicateUser(username, email)
+      await this.userService.searchForDuplicateUser(email)
         .catch(err => {throw err});
       // hash password
       const hash = await (scrypt(password, salt, 32)) as Buffer;
@@ -28,16 +31,17 @@ export class AuthService {
         userPassword: hash.toString('hex'),
         userName: username,
         userEmail: email,
+        forcedReset: false,
       }
       const newUser = await this.userService.create(user.userEmail, user.userName, user.userPassword);
-      return newUser;
+      return from(newUser);
     }
 
-  async validateUser(user: CreateUserDto) {
+  async validateUser(user: LoginUserDto) {
     const hash = await (scrypt(user.userPassword, salt, 32)) as Buffer;
     const authenticatedUser = await this.userService.validateUser({
       ...user,
-      userPassword:hash.toString('hex')
+      userPassword:hash.toString('hex'),
     });
     if(!authenticatedUser){
       throw new BadRequestException('User Not Found');
@@ -47,4 +51,23 @@ export class AuthService {
     }
     return authenticatedUser;
   }
+
+  async updatePassword(userEmail: string, newPassword: string) {
+    try{
+      const user = await this.userService.fineUserReset(userEmail);
+      await this.userService.update(user.userID, {userPassword: newPassword, forcedReset: true});
+    }catch(err){
+      throw err;
+    }
+    
+  }
+  async resetPassword(user: Partial<Users>){
+    const userEmail = user.userEmail;
+    const newPassword = createPassword();
+    const hash = await (scrypt(newPassword, salt, 32)) as Buffer;
+
+    await this.updatePassword(userEmail, hash.toString('hex'));
+    await emailedPassword(newPassword, 'krtcotmo2@gmail.com')
+  }
 }
+

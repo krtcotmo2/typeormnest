@@ -57,6 +57,10 @@ export const AppDataSource = new DataSource({
 AppDataSource.initialize()
   .then((arg) => {
     console.log('=======> connection established', __dirname)
+    console.log('=======> dbHost', process.env.dbHost)
+    console.log('=======> source', process.env.dbSource)
+    console.log('=======> userName', process.env.dbUser)
+    console.log('=======> password', process.env.dbpass)
   })
   .catch( err=> {
     console.log(err);

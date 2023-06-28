@@ -33,19 +33,6 @@ const cookieSession = require('cookie-session');
     UserModule, 
     ReportModule,
     CharacterModule,
-    TypeOrmModule.forRootAsync({
-      inject: [ConfigService],
-      useFactory(config: ConfigService) {
-        return {
-          type: 'sqlite',
-          database: 'db.sqlite',
-          //database: config.get<string>('DB_NAME'),
-          entities: [Users, Report],
-          synchronize: false,
-          autoLoadEntities: true,
-        }
-      },
-    }),
     StatModule,
     SavesModule,
     SkillModule,
@@ -58,6 +45,19 @@ const cookieSession = require('cookie-session');
     ArmorModule,
     NotesModule,
     CharClassesModule,
+    TypeOrmModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory(config: ConfigService) {
+        return {
+          type: 'sqlite',
+          database: 'db.sqlite',
+          //database: config.get<string>('DB_NAME'),
+          entities: [],
+          synchronize: false,
+          autoLoadEntities: false,
+        }
+      },
+    }),
     ],
     controllers: [AppController],
     providers: [

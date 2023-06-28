@@ -3,20 +3,20 @@ import { IsBoolean, IsEmail, IsInt, IsOptional, IsString } from "class-validator
 
 
 export class CreateUserDto {
+  @IsOptional()
   @IsString()
   userName: string;
   
   @IsString()
   userPassword: string;
   
-  @IsOptional()
   @IsEmail()
   @IsString()
   userEmail: string;
 
-  // @IsOptional()
-  // @IsInt()
-  // age: number
+  @IsOptional()
+  @IsBoolean()
+  forcedReset: boolean
 }
 
 export class UpdateUserDto {
@@ -44,14 +44,31 @@ export class UpdateUserDto {
 
 export class ScrubbedUserDto{
   @Expose()
-  id: number;
+  userID: number;
   
   @Expose()
-  username: string;
+  userName: string;
 
   @Expose()
-  email: string;
+  userEmail: string;
 
   @Expose()
-  administrator: boolean;
+  forcedReset: boolean;
+
+  // @Expose()
+  // administrator: boolean;
+}
+
+
+export class LoginUserDto {
+  @IsString()
+  userPassword: string;
+  
+  @IsEmail()
+  @IsString()
+  userEmail: string;
+
+  @IsOptional()
+  @IsBoolean()
+  forcedReset: boolean
 }

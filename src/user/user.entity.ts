@@ -1,7 +1,6 @@
-import { IsBoolean, IsEmail, IsInt, isInt, IsOptional, IsString } from "class-validator";
-import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, BeforeInsert, BeforeUpdate, BeforeRemove, AfterRemove, AfterUpdate, OneToMany, JoinColumn } from "typeorm";
+import { IsBoolean, IsEmail, IsOptional, IsString } from "class-validator";
+import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, BeforeInsert, BeforeUpdate, BeforeRemove, AfterRemove, AfterUpdate} from "typeorm";
 import { Exclude } from "class-transformer";
-import { Report } from "src/report/report.entity";
 
 @Entity()
 export class Users {
@@ -18,24 +17,14 @@ export class Users {
   //exclude is universal and can never be called back in a response so not good if you want to hide 
   userPassword: string;
 
-  // @OneToMany( () => Report, (report) => report.user )
-  // reports: Report[];
+  @Column()
+  @IsOptional()
+  @IsBoolean()
+  forcedReset: boolean;
 
   @Column()
   @IsString()
   userName: string;
-
-  // @Column({default: false})
-  // @IsBoolean()
-  // administrator: boolean;
-
-  // demo of sensitive info filtered by custom interceptor.
-  // @Column({ type: 'int', nullable: true})
-  // @IsInt()
-  // age: number;
-
-
-
 
   /***** LOGGERS FOR EVENTS *****/
   @BeforeInsert()

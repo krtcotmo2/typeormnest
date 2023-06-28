@@ -19,6 +19,8 @@ import { ScrubbedUserDto } from './dto/user-dtos';
 import { AuthService } from './auth.service';
 import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
+import { from, map, of } from 'rxjs';
+import { Users } from './user.entity';
 
 @Controller('/api/user')
 @Serialize(ScrubbedUserDto)    // can also be applied to each route
@@ -37,7 +39,6 @@ export class UserController {
       ).catch(err => {
         throw err;
       });
-    session.userId = user.userID;
     return user;
   }
 
@@ -88,7 +89,13 @@ export class UserController {
     }
     return user;
   }
-  
+
+  @Post('/resetPassword')
+  @Serialize(Users)
+  async resetPassword(@Body() body: Partial<Users>) {
+    return this.authService.resetPassword(body);
+  }
+
   @Get('/')
   findAll() {
     return this.userService.findAll();
