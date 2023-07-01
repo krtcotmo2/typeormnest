@@ -1,4 +1,4 @@
-import { IsBoolean, IsDate, IsInt, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsIdentityCard, IsInt, IsOptional, IsString } from "class-validator";
 import { Expose } from "class-transformer";
 import { DefinedStats } from "src/stat/dto/stat-dto";
 import { DefinedSaves } from "src/saves/dto/saves-dto";
@@ -47,6 +47,10 @@ export class CharactersDto {
 export class SaveCharactersDto {
  @IsInt()
   userID: number;
+
+  @IsInt()
+  @IsOptional()
+  charID: number;
 
   @IsString()
   charName: string;

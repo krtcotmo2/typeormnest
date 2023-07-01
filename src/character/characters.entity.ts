@@ -1,10 +1,12 @@
-import { IsBoolean, IsDate, IsInt, IsOptional, IsString } from "class-validator";
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { IsBoolean, IsDate, IsIdentityCard, IsInt, IsOptional, IsString, isIdentityCard } from "class-validator";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Characters {
-  @PrimaryColumn()
   @IsInt()
+  @PrimaryGeneratedColumn({
+    type: 'int'
+  })
   charID: number;
 
   @Column()

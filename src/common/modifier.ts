@@ -5,10 +5,10 @@ import {
   IsOptional,
   IsString,
 } from 'class-validator';
-import { Column, Entity, PrimaryColumn } from 'typeorm';
+import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
 
 export class Modifier {
-  @PrimaryColumn()
+  @PrimaryGeneratedColumn()
   @IsInt()
   id: number;
 

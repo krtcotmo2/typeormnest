@@ -1,11 +1,11 @@
 import { IsBoolean, IsDate, IsInt, IsOptional, IsString } from "class-validator";
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 // ENTITY NAME MUST MATCH THE TABLE NAME
 @Entity()
 export class Charstats {
     
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     @IsInt()
     id: number;
 

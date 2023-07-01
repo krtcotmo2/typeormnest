@@ -23,5 +23,18 @@ import {
  
     @IsDate()
     updatedAt: Date;
+  }
 
+  export class SaveCharLevelDto {
+    @IsInt()
+    id: number;
+
+    @IsInt()
+    charID: number;
+
+    @IsInt()
+    classID: number;
+
+    @IsInt()
+    classLevel: number;
   }

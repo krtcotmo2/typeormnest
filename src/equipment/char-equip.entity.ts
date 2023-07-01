@@ -6,13 +6,13 @@ import {
   import {
     Entity,
     Column,
-    PrimaryColumn,
+    PrimaryGeneratedColumn,
   } from 'typeorm';
   import { Exclude } from 'class-transformer';
   
   @Entity()
   export class Charequip {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     @IsNumber()
     id: number;
 

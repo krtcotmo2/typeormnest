@@ -5,11 +5,11 @@ import {
     IsString,
   } from 'class-validator';
 import { Modifier } from 'src/common/modifier';
-  import { Column, Entity, PrimaryColumn } from 'typeorm';
+  import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
   
   @Entity()
   export class Noteitems{
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     @IsInt()
     id:number;
 

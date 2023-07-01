@@ -1,11 +1,11 @@
 import { IsBoolean, IsDate, IsDecimal, IsInt, IsNumber, IsString } from "class-validator";
-import { Column, Entity, PrimaryColumn, Table } from "typeorm";
+import { Column, Entity, PrimaryGeneratedColumn, Table } from "typeorm";
 
 @Entity({name: 'classes'})
 export class CharClasses{
     public static tableName = 'classes';
     
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     @IsNumber()
     classID: number;
 

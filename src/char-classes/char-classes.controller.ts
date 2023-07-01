@@ -28,7 +28,8 @@ export class CharClassesController {
                 const transformedStats = calcSavesAndHitsForEachClass(
                     stats, 
                     classID.split(','),
-                    level.split(',')
+                    level.split(','),
+                    []
                 );
                 return of(transformedStats)
             })

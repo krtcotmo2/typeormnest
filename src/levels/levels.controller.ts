@@ -1,5 +1,6 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { LevelsService } from './levels.service';
+import { SaveCharLevelDto } from './dto/levels-dto';
 
 @Controller('/api/levels')
 export class LevelsController {
@@ -13,5 +14,10 @@ export class LevelsController {
     @Get('/all')
     getAllCharLevels(){
         return this.levelService.getAllCharLevels();
+    }
+
+    @Post('/save')
+    SaveCharLevels(@Body() level: SaveCharLevelDto){
+        return this.levelService.saveALevel(level);
     }
 }

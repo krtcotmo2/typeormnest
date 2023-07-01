@@ -4,11 +4,11 @@ import {
     IsInt,
     IsString,
   } from 'class-validator';
-  import { Column, Entity, PrimaryColumn } from 'typeorm';
+  import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
   
   @Entity()
   export class Acs {
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     @IsInt()
     acID: number;
 
@@ -20,7 +20,7 @@ import {
     @IsString()
     acDesc: string;
 
-    @PrimaryColumn()
+    @Column()
     @IsInt()
     sortValue: number;
   

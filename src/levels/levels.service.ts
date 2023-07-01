@@ -4,6 +4,7 @@ import { AppDataSource } from 'src/app-data-source';
 import { CharClasses } from 'src/enum/charClasses';
 import { updateListWithClassName } from './business-logic/levels-helper';
 import { Charlevels } from './levels.entity';
+import { SaveCharLevelDto } from './dto/levels-dto';
 
 @Injectable()
 export class LevelsService {
@@ -24,6 +25,13 @@ export class LevelsService {
             map( levels => {
                 return updateListWithClassName(levels);
             })
+        );
+    }
+
+    saveALevel(saveData: SaveCharLevelDto){
+        return from(AppDataSource.manager.save(
+            Charlevels,
+            saveData)
         );
     }
 

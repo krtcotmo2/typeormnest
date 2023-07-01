@@ -3,12 +3,14 @@ import { CharClassesDTO } from "../dto/char-classes-dto";
 export const calcSavesAndHitsForEachClass = (
     stats: CharClassesDTO[], 
     classes: string[],
-    levels: string[]
+    levelStats: string[],
+    charLvls: any[]
 ) => {
     return stats.map((stat, i) => {
-        const lvl = levels[i];
+        const lvl = levelStats[i];
         const cls = stats.find(c => c.classID === +classes[i])
         return {
+            id: charLvls.find(cls => cls.classID === stats[i].classID).id,
             class: cls.className,
             level: +lvl,
             toHit: Math.ceil(

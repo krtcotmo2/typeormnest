@@ -4,7 +4,7 @@ import {
     IsInt,
   } from 'class-validator';
 import { Modifier } from 'src/common/modifier';
-  import { Column, Entity, PrimaryColumn } from 'typeorm';
+  import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
   
   @Entity()
   export class Charac extends Modifier{
