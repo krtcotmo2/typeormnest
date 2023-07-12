@@ -34,6 +34,19 @@ export class SavesService {
             }));
     }
 
+    updateAllCharSaves(values: UpdateSavesDto[]) {
+        const arr = values.map((saveData: UpdateSavesDto) => {
+          return AppDataSource.manager.update(
+            Charsaves,
+            {id: saveData.id},
+            {
+              ...saveData, 
+              updatedAt: new Date()
+            });
+        });
+        return from(arr);
+      }
+
     deleteCharSaves(saveId: string){
         return from(AppDataSource.manager.delete(Charsaves, {id: saveId}));
     }

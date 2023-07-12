@@ -45,4 +45,15 @@ export class SavesController {
     updateCharSaves(@Param('id') id: string, @Body() save: UpdateSavesDto){
         return this.savesService.updateCharSaves(id, save);
     }
+
+    @Serialize(CreateSavesDto)
+    @Put('/updates/:id')
+    updateAllCharSaves(@Param('id') id: string, @Body() save: UpdateSavesDto[]){
+        return this.savesService.updateAllCharSaves(save).pipe(
+            switchMap(() => {
+              return this.characterService.getCharacterWithStats(id);
+            }),
+            map((char) => JSON.stringify(char)),
+        );
+    }
 }

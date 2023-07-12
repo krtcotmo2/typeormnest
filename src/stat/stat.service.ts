@@ -5,6 +5,7 @@ import { errorHandler } from 'src/interceptors/errorHandler';
 import { buildCharStats, getValues } from './business-logic/stat-helper';
 import { SaveStatDto, StatDto, UpdateStatDto } from './dto/stat-dto';
 import { Charstats } from './stat.entity';
+import { UpdateResult } from 'typeorm/query-builder/result/UpdateResult';
 
 @Injectable()
 export class StatService {
@@ -35,7 +36,7 @@ export class StatService {
     return stat;
   }
 
-  updateStatLine(values: UpdateStatDto): Observable<any> {
+  updateStatLine(values: UpdateStatDto): Observable<UpdateResult> {
     return from(AppDataSource.manager.update(
       Charstats,
       {id: values.id},
@@ -59,6 +60,18 @@ export class StatService {
       Charstats,
       {id: +id},
     ));
+  }
+  updateStatLines(values: UpdateStatDto[]) {
+    const arr = values.map((value: UpdateStatDto) => {
+      return AppDataSource.manager.update(
+        Charstats,
+        {id: value.id},
+        {
+          ...value, 
+          updatedAt: new Date()
+        });
+    });
+    return from(arr);
   }
 
   private getSingleStaById(id: string) {

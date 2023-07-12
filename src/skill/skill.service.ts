@@ -3,6 +3,8 @@ import { forkJoin, from, map, switchMap, of } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
 import { Skills } from './defaultSkills.entity';
 import { Charskills } from './skills.entity';
+import { UpdateStatDto } from 'src/stat/dto/stat-dto';
+import { UpdateSkillDto } from './dto/skills-dto';
 
 @Injectable()
 export class SkillService {
@@ -79,5 +81,18 @@ export class SkillService {
         pinned: false
       }
     )
+  }
+
+  updateSkillLines(values: UpdateSkillDto[]) {
+    const arr = values.map((value: UpdateSkillDto) => {
+      return AppDataSource.manager.update(
+        Charskills,
+        {id: value.id},
+        {
+          ...value, 
+          updatedAt: new Date()
+        });
+    });
+    return from(arr);
   }
 }

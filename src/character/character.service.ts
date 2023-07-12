@@ -36,6 +36,7 @@ import { LevelsService } from 'src/levels/levels.service';
 import { CharClassesService } from 'src/char-classes/char-classes.service';
 import { calcSavesAndHitsForEachClass } from 'src/char-classes/transformers/transform-char-class-data';
 import { DefinedSaves } from 'src/saves/dto/saves-dto';
+import { ToHitService } from 'src/to-hit/to-hit.service';
 
 @Injectable()
 export class CharacterService {
@@ -48,6 +49,7 @@ export class CharacterService {
     private skillService: SkillService,
     private levelsService: LevelsService,
     private charClassService: CharClassesService,
+    private toHitService: ToHitService,
   ) {}
 
   getCharacter(id: string): Observable<Characters> {
@@ -123,6 +125,7 @@ export class CharacterService {
     const saves = this.saveService.getCharSaves(+id);
     const skills = this.skillService.getCharPinnedSkills(id);
     const levels = this.levelsService.getCharLevels(id);
+    const tohits = this.toHitService.getCharToHits(id);
     let charClassIds, charLevels;
     let a: any;
     return levels.pipe(
@@ -133,12 +136,12 @@ export class CharacterService {
         return this.charClassService.getClassesForLimited(charClassIds);
       }),
       switchMap((classStats) => {
-        return forkJoin([char, stats, saves, skills]).pipe(
+        return forkJoin([char, stats, saves, skills, tohits]).pipe(
           catchError((err) => {
             console.log(err);
             throw err;
           }),
-          switchMap(([char, stats, saves, skills]) => {
+          switchMap(([char, stats, saves, skills, tohits]) => {
             if (!char) {
               throw new NotFoundException('Character Not Found');
             }
@@ -166,6 +169,7 @@ export class CharacterService {
                   toHit: lvl.toHit,
                 };
               }),
+              toHitGroups: tohits
             };
             return of(hybrid);
           }),

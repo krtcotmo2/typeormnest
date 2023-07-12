@@ -11,6 +11,7 @@ import { Charlevels } from 'src/levels/levels.entity';
 import { LevelsService } from 'src/levels/levels.service';
 import { CharClassesService } from 'src/char-classes/char-classes.service';
 import { CharClassesDTO } from 'src/char-classes/dto/char-classes-dto';
+import { ToHitService } from 'src/to-hit/to-hit.service';
 @Module({
   imports:[
     TypeOrmModule.forFeature([
@@ -20,7 +21,7 @@ import { CharClassesDTO } from 'src/char-classes/dto/char-classes-dto';
       CharClassesDTO
     ]),
   ],
-  providers: [SavesService, CharacterService, StatService, SkillService, LevelsService,CharClassesService],
+  providers: [SavesService, CharacterService, StatService, SkillService, LevelsService,CharClassesService, ToHitService],
   controllers: [SavesController]
 })
 export class SavesModule {}

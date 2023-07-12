@@ -82,3 +82,28 @@ export class DefinedSKill {
   @IsDate()
   updatedAt: Date;
 }
+
+export class UpdateSkillDto {
+  @IsInt()
+  id: number;
+
+  @IsInt()
+  @IsOptional()
+  score: number;
+
+  @IsBoolean()
+  @IsOptional()
+  isBase: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  isMod: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  isClassSkill: boolean;
+
+  @IsString()
+  @IsOptional()
+  modDesc: string;
+}

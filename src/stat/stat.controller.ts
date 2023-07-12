@@ -52,6 +52,20 @@ export class StatController {
     );
   }
 
+  @Serialize(StatDto)
+  @Put('/updates/:charId')
+  updateStatLines(
+    @Param('charId') charId: string,
+    @Body() stat: UpdateStatDto[],
+  ) {
+    return this.statsService.updateStatLines(stat).pipe(
+      switchMap(() => {
+        return this.characterService.getCharacterWithStats(charId);
+      }),
+      map((char) => JSON.stringify(char)),
+    );
+  }
+
   @Serialize(SaveStatDto)
   @Post('/:charId')
   createStatLine(@Param('charId') charId: string, @Body() stat: SaveStatDto) {

@@ -1,13 +1,17 @@
-import { Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { DefaultSkill } from './dto/skills-dto';
+import { DefaultSkill, UpdateSkillDto } from './dto/skills-dto';
 import { SkillService } from './skill.service';
 import { Charskills } from './skills.entity';
+import { UpdateStatDto } from 'src/stat/dto/stat-dto';
+import { from, map, Observable, of, switchMap } from 'rxjs';
+import { CharacterService } from 'src/character/character.service';
 
 @Controller('/api/skill')
 export class SkillController {
     constructor(
-        private skillService: SkillService
+        private skillService: SkillService,
+        private characterService: CharacterService,
     ){}
 
     //@Serialize(DefaultSkill)
@@ -24,5 +28,15 @@ export class SkillController {
     @Put('/char/:charId/unpin/:skillId')
     unpinSkill(@Param('skillId') skillId: string, @Param('charId') charId: string){
         return this.skillService.unpinSkill(charId, skillId);
+    }
+
+    @Put('/updates/:charId')
+    UpdateSkillLines(@Body() skills: UpdateSkillDto[], @Param('charId') charId: string){
+        return this.skillService.updateSkillLines(skills).pipe(
+            switchMap(() => {
+              return this.characterService.getCharacterWithStats(charId);
+            }),
+            map((char) => JSON.stringify(char) ),
+          );
     }
 }
