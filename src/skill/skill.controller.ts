@@ -1,6 +1,6 @@
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
-import { DefaultSkill, UpdateSkillDto } from './dto/skills-dto';
+import { DefaultSkill, NewSkill, UpdateSkillDto } from './dto/skills-dto';
 import { SkillService } from './skill.service';
 import { Charskills } from './skills.entity';
 import { UpdateStatDto } from 'src/stat/dto/stat-dto';
@@ -39,4 +39,25 @@ export class SkillController {
             map((char) => JSON.stringify(char) ),
           );
     }
+
+    @Post('/:charId')
+    saveSkillLines(@Body() skills: NewSkill, @Param('charId') charId: string){
+        return this.skillService.createSkillLine(skills).pipe(
+            switchMap(() => {
+              return this.characterService.getCharacterWithStats(charId);
+            }),
+            map((char) => JSON.stringify(char) ),
+          );
+    }
+    
+    @Serialize(DefaultSkill)
+    @Delete('/:charId/:id')
+    deleteStatLine(@Param('charId') charId: string, @Param('id') id: string) {
+        return this.skillService.deleteSkillLine(id).pipe(
+        switchMap(() => {
+            return this.characterService.getCharacterWithStats(charId);
+        }),
+        map((char) => JSON.stringify(char) ),
+        );
+  }
 }

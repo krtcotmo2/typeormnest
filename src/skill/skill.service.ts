@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { forkJoin, from, map, switchMap, of } from 'rxjs';
+import { forkJoin, from, map, switchMap, of, Observable } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
 import { Skills } from './defaultSkills.entity';
 import { Charskills } from './skills.entity';
 import { UpdateStatDto } from 'src/stat/dto/stat-dto';
-import { UpdateSkillDto } from './dto/skills-dto';
+import { DefaultSkill, NewSkill, UpdateSkillDto } from './dto/skills-dto';
 
 @Injectable()
 export class SkillService {
@@ -83,6 +83,15 @@ export class SkillService {
     )
   }
 
+  createSkillLine(values: NewSkill): Observable<Charskills> {
+    const a = AppDataSource.manager.create(Charskills, values);
+    return from(AppDataSource.manager.save(Charskills, {
+      ...a,
+      updatedAt: new Date(),
+      createdAt: new Date(),
+    }));
+  }
+
   updateSkillLines(values: UpdateSkillDto[]) {
     const arr = values.map((value: UpdateSkillDto) => {
       return AppDataSource.manager.update(
@@ -94,5 +103,12 @@ export class SkillService {
         });
     });
     return from(arr);
+  }
+
+  deleteSkillLine(id: string){
+    return from(AppDataSource.manager.delete(
+      Charskills,
+      {id: +id},
+    ));
   }
 }

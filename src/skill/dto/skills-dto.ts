@@ -107,3 +107,31 @@ export class UpdateSkillDto {
   @IsOptional()
   modDesc: string;
 }
+
+export class NewSkill {
+  @IsInt()
+  charID: number;
+
+  @IsInt()
+  skillID: number;
+
+  @IsInt()
+  score: number;
+
+  @IsBoolean()
+  isClassSkill: boolean;
+
+  @IsBoolean()
+  isRanks: boolean;
+
+  @IsBoolean()
+  isMod: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  pinned: boolean;
+
+  @IsString()
+  @IsOptional()
+  modDesc: string;
+}
