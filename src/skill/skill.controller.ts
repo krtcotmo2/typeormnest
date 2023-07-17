@@ -59,5 +59,5 @@ export class SkillController {
         }),
         map((char) => JSON.stringify(char) ),
         );
-  }
+    }
 }

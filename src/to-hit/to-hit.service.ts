@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { forkJoin, of, switchMap } from 'rxjs';
+import { Observable, forkJoin, from, of, switchMap } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
 import { Tohits } from './hits.entity';
 import { Chartohits } from './to-hit.entity';
+import { NewToHit, UpdateToHitDto } from './dto/to-hit-dto';
 
 @Injectable()
 export class ToHitService {
@@ -47,15 +48,44 @@ export class ToHitService {
         )
       }
     
-      unpinHit(charId: string, hitId: string){
-        return AppDataSource.manager.update(Chartohits, 
+    unpinHit(charId: string, hitId: string){
+      return AppDataSource.manager.update(Chartohits, 
+        {
+          toHitID: hitId,
+          charID: charId
+        },
+        {
+          pinned: false
+        }
+      )
+    }
+
+    updateToHitLines(values: UpdateToHitDto[]) {
+      const arr = values.map((value: UpdateToHitDto) => {
+        return AppDataSource.manager.update(
+          Chartohits,
+          {id: value.id},
           {
-            toHitID: hitId,
-            charID: charId
-          },
-          {
-            pinned: false
-          }
-        )
-      }
+            ...value, 
+            updatedAt: new Date()
+          });
+      });
+      return from(arr);
+    }
+
+    createToHitLine(values: NewToHit): Observable<Chartohits> {
+      const a = AppDataSource.manager.create(Chartohits, values);
+      return from(AppDataSource.manager.save(Chartohits, {
+        ...a,
+        updatedAt: new Date(),
+        createdAt: new Date(),
+      }));
+    }
+
+    deleteToHitLine(id: string){
+      return from(AppDataSource.manager.delete(
+        Chartohits,
+        {id: +id},
+      ));
+    }
 }
