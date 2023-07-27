@@ -14,10 +14,23 @@ import { CharClassesService } from 'src/char-classes/char-classes.service';
 import { ToHitService } from 'src/to-hit/to-hit.service';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([Charstats, Characters, Charlevels, CharClassesDTO]),
+  imports: [
+    TypeOrmModule.forFeature([
+      Charstats,
+      Characters,
+      Charlevels,
+      CharClassesDTO,
+    ]),
   ],
-  providers: [StatService, CharacterService, SavesService, SkillService, LevelsService, CharClassesService, ToHitService],
-  controllers: [StatController]
+  providers: [
+    StatService,
+    CharacterService,
+    SavesService,
+    SkillService,
+    LevelsService,
+    CharClassesService,
+    ToHitService,
+  ],
+  controllers: [StatController],
 })
 export class StatModule {}
