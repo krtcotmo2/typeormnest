@@ -46,4 +46,17 @@ export class FeatService {
             {type: typeName}
         );
     }
+
+    async  saveFeat(charId: string, featId: string){
+        const newFeat = AppDataSource.manager.create(
+            Charfeats,
+            {
+                charID: +charId,
+                featID: +featId,
+                updatedAt: new Date(),
+                createdAt: new Date(),
+            }
+        );
+        return await AppDataSource.manager.save(Charfeats, newFeat);
+    }
 }

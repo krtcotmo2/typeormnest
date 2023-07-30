@@ -1,4 +1,4 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, Post } from '@nestjs/common';
 import { FeatService } from './feat.service';
 
 @Controller('api/feat')
@@ -18,5 +18,13 @@ export class FeatController {
     @Get('/type/:typeName')
     getFeatsOfType(@Param('typeName') typeName: string){
         return this.featService.getFeatsOfType(typeName);
+    }
+
+    @Post('/new/:charId/:featId')
+    saveFeat(
+        @Param('charId') charId: string,
+        @Param('featId') featId: string,
+    ){
+        return this.featService.saveFeat(charId, featId);
     }
 }
