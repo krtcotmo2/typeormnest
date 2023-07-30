@@ -28,4 +28,22 @@ export class FeatService {
         )
 
     }
+
+   async  getFeatsType(){
+        const list = await AppDataSource.manager.createQueryBuilder(Feats, 'feats')
+        .select('feats.type')
+        .distinct(true)
+        .orderBy('type')
+        .getRawMany()
+        
+        
+        return list.map((arg: {feats_type:string} )=> arg.feats_type);
+    }
+
+    async  getFeatsOfType(typeName: string){
+        return AppDataSource.manager.findBy(
+            Feats,
+            {type: typeName}
+        );
+    }
 }

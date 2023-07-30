@@ -9,4 +9,14 @@ export class FeatController {
     getCharFeats(@Param('charId') charId: string){
         return this.featService.getCharFeats(charId);
     }
+
+    @Get('/type')
+    getFeatsType(){
+        return this.featService.getFeatsType();
+    }
+
+    @Get('/type/:typeName')
+    getFeatsOfType(@Param('typeName') typeName: string){
+        return this.featService.getFeatsOfType(typeName);
+    }
 }
