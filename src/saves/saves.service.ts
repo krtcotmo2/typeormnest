@@ -19,7 +19,7 @@ export class SavesService {
     createCharSaves(charId: string, saveData: CreateSavesDto){
         saveData.charID = +charId;
         saveData.createdAt = new Date();
-        saveData.updatedAt = new Date()
+        saveData.updatedAt = new Date();
         const a  = AppDataSource.manager.create(Charsaves, saveData);
         return from(AppDataSource.manager.save(Charsaves,a))
     }
