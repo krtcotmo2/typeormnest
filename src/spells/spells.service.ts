@@ -60,6 +60,9 @@ export class SpellsService {
         )
     }
 
+    deleteCharSpells(spellId: string){
+        return AppDataSource.manager.delete(Charspells, spellId);
+    }
 
     private getSingleSpell(spellId: string){
         return AppDataSource.manager.findBy(
