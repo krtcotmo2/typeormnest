@@ -1,17 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { forkJoin, from, map } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
-import { Charnotes } from './char-notes';
+import { Charnotes } from './char-notes.entity';
 import { Noteitems } from './notes.entity';
 
 @Injectable()
 export class NotesService {
 
     getCharNotes(charId: string){
-        return from(AppDataSource.manager.findBy(
-            Charnotes, 
-            {charID: +charId}
-        )).pipe(
+        return from(AppDataSource.manager.find(
+            Charnotes,
+            {
+                relations:['notes'],
+                where: {
+                    charID: +charId 
+                }
+            }
+            )).pipe(
             map( list => {
                 return list.sort( (val1, val2) => val1.noteOrder < val2.noteOrder ? -1 : 1)
             })

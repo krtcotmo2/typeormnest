@@ -4,7 +4,8 @@ import {
     IsInt,
     IsString,
   } from 'class-validator';
-  import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+  import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Noteitems } from './notes.entity';
   
   @Entity()
   export class Charnotes{
@@ -33,4 +34,8 @@ import {
     @IsDate()
     updatedAt: Date;
 
+    @OneToMany(() => Noteitems, note=> note.noteID, {
+      cascade: true
+    } )
+    notes: Noteitems[];
   }

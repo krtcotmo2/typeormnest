@@ -16,7 +16,7 @@ import { Charfeats } from "./feat/char-feat.entity";
 import { Charlevels } from "./levels/levels.entity";
 import { Acs } from "./armor/armor.entity";
 import { Charac } from "./armor/char-armor.entity";
-import { Charnotes } from "./notes/char-notes";
+import { Charnotes } from "./notes/char-notes.entity";
 import { Noteitems } from "./notes/notes.entity";
 import { CharClasses} from "./char-classes/char-classes.entity";
 import { Users } from './user/user.entity'
