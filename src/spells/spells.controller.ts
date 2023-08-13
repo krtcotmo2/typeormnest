@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Put } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { MinimalSpellDto, ScrubbedSpellDto, UpdateSpellDto } from './dtos/spells-dto';
 import { SpellsService } from './spells.service';
+import { from, map, of } from 'rxjs';
 
 @Controller('/api/spells')
 export class SpellsController {
@@ -10,7 +11,9 @@ export class SpellsController {
     @Serialize(ScrubbedSpellDto)
     @Get('/char/:charId')
     getCharSpells(@Param('charId') charId: string){
-        return this.spellService.getCharSpells(charId);
+        return this.spellService.getCharSpells(charId).pipe(
+            map(data => data)
+        );
     }
 
     @Serialize(MinimalSpellDto)
@@ -20,6 +23,15 @@ export class SpellsController {
         @Body() spell: UpdateSpellDto
     ){
         return this.spellService.updateCharSpells(spellId, spell);
+    }
+
+    @Serialize(UpdateSpellDto)
+    @Post('/char/:charId')
+    createCharSpells(
+        @Param('charId') charId: string, 
+        @Body() spell: UpdateSpellDto
+    ){
+        return this.spellService.createCharSpells(charId, spell);
     }
 
 }
