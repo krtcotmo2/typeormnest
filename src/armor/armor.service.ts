@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { forkJoin, from, map } from 'rxjs';
+import { Observable, forkJoin, from, map } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
 import { Acs } from './armor.entity';
 import { categorizeACS } from './business-logic/armor-helper';
 import { Charac } from './char-armor.entity';
-import { ArmorGroupCreate } from './dto/armor-dto';
+import { ArmorGroupCreate, ArmorModLine } from './dto/armor-dto';
 
 @Injectable()
 export class ArmorService {
@@ -33,4 +33,28 @@ export class ArmorService {
         const a  = AppDataSource.manager.create(Acs, newAcGroup);
         return from(AppDataSource.manager.save(Acs,a))
     }
+
+    updateCharACS(charId: number, body: ArmorModLine[]){
+        const arr = body.map((value: ArmorModLine) => {
+            const a  = AppDataSource.manager.create(Charac, value);
+            return from(AppDataSource.manager.save(Charac,a))
+        });
+        return from(arr);
+    }
+
+    createArmorLine(values: ArmorModLine): Observable<Charac> {
+        const a = AppDataSource.manager.create(Charac, values);
+        return from(AppDataSource.manager.save(Charac, {
+          ...a,
+          updatedAt: new Date(),
+          createdAt: new Date(),
+        }));
+      }
+
+    deleteArmorLine(id: string){
+        return from(AppDataSource.manager.delete(
+          Charac,
+          {id: +id},
+        ));
+      }
 }

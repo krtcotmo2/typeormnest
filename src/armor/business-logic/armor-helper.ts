@@ -3,6 +3,7 @@ export const categorizeACS = (categories: any[], points: any[]) => {
         const catPoints = points.filter(point => point.acID === cat.acID)
         console.log(cat)
         return {
+            acID: cat.acID,
             name: cat.acDesc,
             values: catPoints.sort((val1, val2) => {
                 return val1.sortOrder < val2.sortOrder ? -1 : 1;
