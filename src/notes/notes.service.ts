@@ -14,9 +14,10 @@ export class NotesService {
                 relations:['notes'],
                 where: {
                     charID: +charId 
-                }
+                },
             }
-            )).pipe(
+            ))
+            .pipe(
             map( list => {
                 return list.sort( (val1, val2) => val1.noteOrder < val2.noteOrder ? -1 : 1)
             })
@@ -32,5 +33,12 @@ export class NotesService {
                 return list.sort( (val1, val2) => val1.itemOrder < val2.itemOrder ? -1 : 1)
             })
         );
+    }
+
+    deleteNote(noteId: string){
+        return from(AppDataSource.manager.delete(
+            Noteitems, 
+            {id: noteId}
+        ))
     }
 }
