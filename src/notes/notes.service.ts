@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { forkJoin, from, map } from 'rxjs';
+import { catchError, forkJoin, from, map } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
 import { Charnotes } from './char-notes.entity';
 import { Noteitems } from './notes.entity';
+import { MinimalNoteDto } from './dtos/notes-dto';
 
 @Injectable()
 export class NotesService {
@@ -33,6 +34,22 @@ export class NotesService {
                 return list.sort( (val1, val2) => val1.itemOrder < val2.itemOrder ? -1 : 1)
             })
         );
+    }
+
+    createNewNote(note: MinimalNoteDto){
+        const theNote: Charnotes = {
+            ...note,
+            notes:[],
+            updatedAt: new Date(),
+            createdAt: new Date()
+        }
+        const newNote  = AppDataSource.manager.create(Charnotes, theNote);
+        return from(AppDataSource.manager.save(Charnotes, newNote)).pipe(
+            catchError(err =>{
+                console.log(err);
+                return err;
+            }),
+        )
     }
 
     deleteNote(noteId: string){
