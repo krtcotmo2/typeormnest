@@ -111,4 +111,14 @@ export class SkillService {
       {id: +id},
     ));
   }
+
+  createNewSkill(values: NewSkill): Observable<Charskills> {
+
+    const a = AppDataSource.manager.create(Charskills, values as Charskills);
+    return from(AppDataSource.manager.save(Charskills, {
+      ...a,
+      updatedAt: new Date(),
+      createdAt: new Date(),
+    }));
+  }
 }

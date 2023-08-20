@@ -49,7 +49,18 @@ export class SkillController {
             map((char) => JSON.stringify(char) ),
           );
     }
+
     
+    @Post('/new-skill/:charId')
+    saveNewSkill(@Body() skills: NewSkill, @Param('charId') charId: string){
+        return this.skillService.createNewSkill(skills).pipe(
+            switchMap(() => {
+              return this.getCharSkills(charId);
+            }),
+            map((char) => JSON.stringify(char) ),
+          );
+    }
+
     @Serialize(DefaultSkill)
     @Delete('/:charId/:id')
     deleteStatLine(@Param('charId') charId: string, @Param('id') id: string) {

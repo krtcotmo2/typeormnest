@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { catchError, forkJoin, from, map } from 'rxjs';
+import { Observable, catchError, forkJoin, from, map } from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
 import { Charnotes } from './char-notes.entity';
 import { Noteitems } from './notes.entity';
-import { MinimalNoteDto } from './dtos/notes-dto';
+import { MinimalNoteDto, NoteItemDto } from './dtos/notes-dto';
 
 @Injectable()
 export class NotesService {
@@ -52,10 +52,54 @@ export class NotesService {
         )
     }
 
+    createNewNoteItem(note: NoteItemDto){
+        const theNote: Noteitems = {
+            ...note,
+            updatedAt: new Date(),
+            createdAt: new Date()
+        }
+        const newNoteItem  = AppDataSource.manager.create(Noteitems, theNote);
+        return from(AppDataSource.manager.save(Noteitems, newNoteItem)).pipe(
+            catchError(err =>{
+                console.log(err);
+                return err;
+            }),
+        )
+    }
+
     deleteNote(noteId: string){
         return from(AppDataSource.manager.delete(
             Noteitems, 
             {id: noteId}
         ))
+    }
+
+    updateNotes(notes: NoteItemDto[]){
+        return from(new Promise( async (resolve, reject) => {
+            try{
+                await notes.forEach(async note => {
+                    const n: Noteitems = {
+                        id: note.id,
+                        itemOrder: note.itemOrder,
+                        itemDetails: note.itemDetails,
+                        createdAt: note.createdAt,
+                        updatedAt: note.updatedAt,
+                        noteID: note.noteID
+                    }
+                    AppDataSource.manager.update(
+                        Noteitems,
+                        {id: note.id},
+                        {
+                            ...n,
+                            updatedAt: new Date()
+                        }
+                    )
+                });
+                resolve('saved');
+            }catch(err){
+                console.log(err);
+                reject(new Error( 'not happening'))
+            }
+        }));
     }
 }

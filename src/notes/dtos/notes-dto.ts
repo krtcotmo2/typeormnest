@@ -1,5 +1,5 @@
 import { Expose } from "class-transformer";
-import { IsInt, IsString } from "class-validator";
+import { IsDate, IsInt, IsOptional, IsString } from "class-validator";
 
 export class MinimalNoteDto{
     @IsInt()
@@ -13,4 +13,28 @@ export class MinimalNoteDto{
 
     @IsString()
     noteTitle: string;
+  }
+
+  
+  export class NoteItemDto{
+    @IsInt()
+    id: number;
+
+    @IsInt()
+    itemOrder: number;
+
+    @IsString()
+    itemDetails: string;
+
+    @IsDate()
+    @IsOptional()
+    createdAt: Date;
+
+    @IsDate()
+    @IsOptional()
+    updatedAt: Date;
+
+    @IsInt()
+    @IsOptional()
+    noteID: number;
   }
