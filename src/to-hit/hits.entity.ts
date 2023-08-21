@@ -13,6 +13,10 @@ export class Tohits{
 
   @Column()
   @IsNumber()
+  charID: number;
+
+  @Column()
+  @IsNumber()
   toHitOrder: number;
 
   @Column()
@@ -32,7 +36,7 @@ export class Tohits{
   critDamage: string;
 
   @Column()
-  @IsString()
+  @IsBoolean()
   isMelee: boolean;
 
   @Column()

@@ -31,7 +31,9 @@ export class ArmorService {
             updatedAt: new Date()
         };
         const a  = AppDataSource.manager.create(Acs, newAcGroup);
-        return from(AppDataSource.manager.save(Acs,a))
+        return AppDataSource.manager.save(Acs,a).then(()=>{
+            return this.getCharACS(charId.toString());
+        })
     }
 
     updateCharACS(charId: number, body: ArmorModLine[]){

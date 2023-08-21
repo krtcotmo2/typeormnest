@@ -4,7 +4,7 @@ import { Tohits } from './hits.entity';
 import { Serialize } from 'src/interceptors/serialize.interceptor';
 import { map, switchMap } from 'rxjs';
 import { CharacterService } from 'src/character/character.service';
-import { NewToHit, UpdateToHitDto } from './dto/to-hit-dto';
+import { NewToHit, NewToHitCategory, UpdateToHitDto } from './dto/to-hit-dto';
 
 @Controller('api/to-hit')
 export class ToHitController {
@@ -38,7 +38,7 @@ export class ToHitController {
     }
 
     @Post('/:charId')
-    saveSkillLines(@Body() toHit: NewToHit, @Param('charId') charId: string){
+    saveToHitLines(@Body() toHit: NewToHit, @Param('charId') charId: string){
         return this.toHitService.createToHitLine(toHit).pipe(
             switchMap(() => {
               return this.characterService.getCharacterWithStats(charId);
@@ -47,6 +47,27 @@ export class ToHitController {
           );
     }
     
+    @Post('/new-to-hit/:charId')
+    saveToHitCategory(@Body() toHit: NewToHitCategory, @Param('charId') charId: string){
+        return this.toHitService.createToHitCategory(toHit).pipe(
+            switchMap((arg) => {
+                const newToHitLine: NewToHit = {
+                    charID: +charId,
+                    isMod: true,
+                    modDesc: 'First mod',
+                    score: 0,
+                    toHitID: arg.toHitID,
+                    isBase: false
+                }
+                return this.saveToHitLines(newToHitLine, charId);
+            }),
+            switchMap(() => {
+              return this.getCharToHits(charId);
+            }),
+            map((char) => JSON.stringify(char) ),
+          );
+    }
+
     @Serialize(Tohits)
     @Delete('/:charId/:id')
     deleteStatLine(@Param('charId') charId: string, @Param('id') id: string) {

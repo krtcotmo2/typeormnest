@@ -33,4 +33,10 @@ export class ArmorModLine {
 
   @IsBoolean()
   isMod: boolean;
+
+  @IsBoolean()
+  aidsFlatfoot: boolean;
+
+  @IsBoolean()
+  aidsTouchAttach: boolean;
 }

@@ -58,4 +58,31 @@ import {
     @IsOptional()
     modDesc: string;
   }
+
+  export class NewToHitCategory {
+    @IsInt()
+    toHitID: number;
+
+    @IsInt()
+    charID: number;
+
+    @IsNumber()
+    toHitOrder: number;
+
+    @IsString()
+    toHitDesc: string;
+
+    @IsString()
+    critRange: string;
+
+    @IsString()
+    critDamage: string;
+
+    @IsString()
+    damage: string;
+    
+    @IsBoolean()
+    @IsOptional()
+    isMelee: boolean;
+  }
   
