@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { UserService } from './user.service';
 import * as dotenv from "dotenv";
 import { scrypt as _scrypt} from 'crypto';
@@ -52,10 +52,11 @@ export class AuthService {
     return authenticatedUser;
   }
 
-  async updatePassword(userEmail: string, newPassword: string) {
+  async updatePassword(userEmail: string, newPassword: string,  forcedReset?: boolean ) {
     try{
-      const user = await this.userService.fineUserReset(userEmail);
-      await this.userService.update(user.userID, {userPassword: newPassword, forcedReset: true});
+      const user = await this.userService.findUserReset(userEmail)
+        .catch(err=> {throw new Error('user_not_found')});
+      await this.userService.update(user.userID, {userPassword: newPassword, forcedReset: forcedReset ?? false});
     }catch(err){
       throw err;
     }
@@ -66,8 +67,10 @@ export class AuthService {
     const newPassword = createPassword();
     const hash = await (scrypt(newPassword, salt, 32)) as Buffer;
 
-    await this.updatePassword(userEmail, hash.toString('hex'));
-    await emailedPassword(newPassword, 'krtcotmo2@gmail.com')
+    await this.updatePassword(userEmail, hash.toString('hex'), true)
+      .catch(err => {
+        throw new NotFoundException('Email not found');});
+    await emailedPassword(newPassword, userEmail)
   }
 }
 

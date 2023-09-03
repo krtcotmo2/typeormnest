@@ -93,7 +93,8 @@ export class UserController {
   @Post('/resetPassword')
   @Serialize(Users)
   async resetPassword(@Body() body: Partial<Users>) {
-    return this.authService.resetPassword(body);
+    return this.authService.resetPassword(body)
+      .catch(err => {throw err});
   }
 
   @Get('/')

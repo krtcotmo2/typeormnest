@@ -36,9 +36,9 @@ export class UserService {
     return await AppDataSource.manager.findOneBy(Users, {userID: id});
   }
 
-  async fineUserReset(email: string){
+  async findUserReset(email: string){
     if(!email){
-      throw new BadRequestException('Null Exception');;
+      throw new BadRequestException('user_not_found');;
     }
     return await AppDataSource.manager.findOneBy(Users, {userEmail: email});
   }
