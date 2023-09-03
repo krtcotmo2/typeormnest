@@ -7,7 +7,25 @@ export class DefaultEquipmentDto {
 }
 
 export class SaveEquipmentDto {
+    id: number;
+    charID: number;
+    equip: string;
+    weight: number;
+    equipOrder: number;
+    partOfOverallWeight: boolean;
+    location?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }
 
 export class UpdateEquipmentDto {
+    id: number;
+    charID: number;
+    equip: string;
+    weight: number;
+    equipOrder: number;
+    partOfOverallWeight: boolean;
+    location?: string;
+    createdAt?: Date;
+    updatedAt?: Date;
 }

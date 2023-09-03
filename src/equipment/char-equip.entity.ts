@@ -1,7 +1,10 @@
 import {
+  IsBoolean,
     IsDate,
     IsNumber,
+    IsOptional,
     IsString,
+    isDecimal,
   } from 'class-validator';
   import {
     Entity,
@@ -24,17 +27,22 @@ import {
     @IsString()
     equip: string;
   
-    @Column()
+    @Column('decimal')
     @IsNumber()
     weight: number;
 
     @Column()
     @IsString()
+    @IsOptional()
     location: string;
   
     @Column()
     @IsNumber()
     equipOrder: number;
+
+    @Column()
+    @IsBoolean()
+    partOfOverallWeight: boolean;
 
     @Column()
     @IsDate()
