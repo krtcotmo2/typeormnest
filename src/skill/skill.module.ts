@@ -11,12 +11,20 @@ import { SavesService } from 'src/saves/saves.service';
 import { LevelsService } from 'src/levels/levels.service';
 import { CharClassesService } from 'src/char-classes/char-classes.service';
 import { ToHitService } from 'src/to-hit/to-hit.service';
+import { ArmorService } from 'src/armor/armor.service';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([Characters]),
+  imports: [TypeOrmModule.forFeature([Characters])],
+  providers: [
+    SkillService,
+    StatService,
+    SavesService,
+    LevelsService,
+    CharClassesService,
+    ToHitService,
+    CharacterService,
+    ArmorService,
   ],
-  providers: [SkillService, StatService, SavesService, LevelsService, CharClassesService, ToHitService, CharacterService],
-  controllers: [SkillController]
+  controllers: [SkillController],
 })
 export class SkillModule {}

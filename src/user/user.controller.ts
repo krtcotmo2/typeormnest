@@ -21,6 +21,11 @@ import { CurrentUser } from 'src/decorators/current-user.decorator';
 import { AuthGuard } from 'src/guards/auth.guard';
 import { from, map, of } from 'rxjs';
 import { Users } from './user.entity';
+import { scrypt as _scrypt} from 'crypto';
+import { promisify } from 'util';
+
+const scrypt = promisify(_scrypt);
+const salt =  process.env.SALT;
 
 @Controller('/api/user')
 @Serialize(ScrubbedUserDto)    // can also be applied to each route
@@ -63,11 +68,14 @@ export class UserController {
     return this.userService.delete(+id);
   }
   
-  @UseGuards(AuthGuard)
   @ApiParam({ name: 'id', required: true })
   @Put('/update/:id')
-  async update(@Param('id') id: string, @Body() body: UpdateUserDto) {
-    return this.userService.update(+id, body);
+  async update(@Param('id') id: string, @Body() body) {
+   
+      const hash = await (scrypt(body.userPassword, salt, 32)) as Buffer;
+      body.userPassword = hash.toString('hex');
+    
+    return this.userService.update(+id, {...body.user,userPassword: body.userPassword, forcedReset: false});
   }
 
   @UseGuards(AuthGuard)

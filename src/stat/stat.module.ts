@@ -12,6 +12,7 @@ import { LevelsService } from 'src/levels/levels.service';
 import { CharClassesDTO } from 'src/char-classes/dto/char-classes-dto';
 import { CharClassesService } from 'src/char-classes/char-classes.service';
 import { ToHitService } from 'src/to-hit/to-hit.service';
+import { ArmorService } from 'src/armor/armor.service';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { ToHitService } from 'src/to-hit/to-hit.service';
     LevelsService,
     CharClassesService,
     ToHitService,
+    ArmorService,
   ],
   controllers: [StatController],
 })

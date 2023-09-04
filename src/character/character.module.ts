@@ -13,12 +13,13 @@ import { Charlevels } from 'src/levels/levels.entity';
 import { CharClassesService } from 'src/char-classes/char-classes.service';
 import { CharClassesDTO } from 'src/char-classes/dto/char-classes-dto';
 import { ToHitService } from 'src/to-hit/to-hit.service';
+import { ArmorService } from 'src/armor/armor.service';
 
 @Module({
   imports: [
     TypeOrmModule.forFeature([Characters, Charstats, Charsaves, Charlevels, CharClassesDTO])
   ],
-  providers: [CharacterService, StatService, SavesService, SkillService, LevelsService, CharClassesService, ToHitService],
+  providers: [CharacterService, StatService, SavesService, SkillService, LevelsService, CharClassesService, ToHitService, ArmorService],
   controllers: [CharacterController]
 })
 export class CharacterModule {}

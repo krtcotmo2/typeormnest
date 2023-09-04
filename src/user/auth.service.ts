@@ -7,6 +7,7 @@ import { CreateUserDto, LoginUserDto } from './dto/user-dtos';
 import { from, of } from 'rxjs';
 import { createPassword, emailedPassword } from './auth-helper';
 import { Users } from './user.entity';
+import { truncate } from 'fs/promises';
 
 const scrypt = promisify(_scrypt);
 

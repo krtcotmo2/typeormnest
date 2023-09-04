@@ -34,7 +34,6 @@ export const emailedPassword = (pass: string, userEmail: string) =>{
         console.log(error);
         return false;
       } else {
-        console.log('true');
         return true;
       }
     });

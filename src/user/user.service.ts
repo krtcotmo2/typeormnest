@@ -6,13 +6,15 @@ import { CreateUserDto, LoginUserDto } from './dto/user-dtos';
 import { AppDataSource } from 'src/app-data-source';
 import { from } from 'rxjs';
 
+
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(Users) 
     private repo: Repository<Users>
-  ){}
-  
+  ){
+    
+  }
   async searchForDuplicateUser(email: string){
     const user =  await AppDataSource.manager.find(Users, {
       where: [
@@ -65,11 +67,12 @@ export class UserService {
     return AppDataSource.manager.remove(Users, user);
   }
 
-  async update(id: number, attrs: Partial<Users>){
+  async update(id: number, attrs: Partial<Users>, generateNew: boolean = false){
     const updatedUser = await AppDataSource.manager.findOneBy(Users, {userID: id});
     if(!updatedUser){
       throw new NotFoundException('User not found');
     }
+
     Object.assign(updatedUser, attrs);
     return AppDataSource.manager.save(Users, updatedUser);
   }

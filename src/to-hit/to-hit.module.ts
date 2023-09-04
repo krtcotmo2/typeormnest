@@ -9,12 +9,21 @@ import { CharClassesService } from 'src/char-classes/char-classes.service';
 import { LevelsService } from 'src/levels/levels.service';
 import { SavesService } from 'src/saves/saves.service';
 import { SkillService } from 'src/skill/skill.service';
+import { ArmorService } from 'src/armor/armor.service';
 
 @Module({
-  imports:[
-    TypeOrmModule.forFeature([Characters]),
+  imports: [TypeOrmModule.forFeature([Characters])],
+  providers: [
+    ToHitService,
+    StatService,
+    SavesService,
+    SkillService,
+    LevelsService,
+    CharClassesService,
+    ToHitService,
+    CharacterService,
+    ArmorService,
   ],
-  providers: [ToHitService, StatService, SavesService, SkillService, LevelsService, CharClassesService, ToHitService, CharacterService],
-  controllers: [ToHitController]
+  controllers: [ToHitController],
 })
 export class ToHitModule {}
