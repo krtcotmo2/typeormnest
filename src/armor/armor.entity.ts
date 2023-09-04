@@ -23,6 +23,10 @@ import {
     @Column()
     @IsInt()
     sortValue: number;
+
+    @Column()
+    @IsBoolean()
+    pinned: boolean;
   
     @Column()
     @IsDate()

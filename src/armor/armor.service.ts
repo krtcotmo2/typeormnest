@@ -27,6 +27,7 @@ export class ArmorService {
             acDesc: body.acDesc,
             charID: body.charID,
             sortValue: body.sortValue,
+            pinned: body.pinned,
             createdAt: new Date(),
             updatedAt: new Date()
         };
@@ -59,4 +60,28 @@ export class ArmorService {
           {id: +id},
         ));
       }
+    
+    pinArmor(charId: string, acId: string){
+    return AppDataSource.manager.update(Acs, 
+        {
+            acID: acId,
+            charID: charId
+        },
+        {
+            pinned: true
+        }
+    )
+    }
+
+    unpinArmor(charId: string, acId: string){
+    return AppDataSource.manager.update(Acs, 
+        {
+            acID: acId,
+            charID: charId
+        },
+        {
+            pinned: false
+        }
+    )
+    }
 }

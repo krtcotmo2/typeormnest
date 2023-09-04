@@ -46,4 +46,14 @@ export class ArmorController {
             map((char) => JSON.stringify(char) ),
           );
     }
+
+    @Put('/char/:charId/pin/:acId')
+    pinSkill(@Param('acId') acId: string, @Param('charId') charId: string){
+        return this.armorService.pinArmor(charId, acId);
+    }
+
+    @Put('/char/:charId/unpin/:acId')
+    unpinSkill(@Param('acId') acId: string, @Param('charId') charId: string){
+        return this.armorService.unpinArmor(charId, acId);
+    }
 }

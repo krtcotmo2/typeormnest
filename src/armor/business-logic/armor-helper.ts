@@ -7,6 +7,7 @@ export const categorizeACS = (categories: any[], points: any[]) => {
             values: catPoints.sort((val1, val2) => {
                 return val1.sortOrder < val2.sortOrder ? -1 : 1;
             }),
+            pinned: cat.pinned,
             sortOrder: cat.sortValue,
             score:catPoints.reduce((startingValue, point) => startingValue + point.score, 0),
         }
