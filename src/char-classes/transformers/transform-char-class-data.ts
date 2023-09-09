@@ -8,9 +8,9 @@ export const calcSavesAndHitsForEachClass = (
 ) => {
     return stats.map((stat, i) => {
         const lvl = levelStats[i];
-        const cls = stats.find(c => c.classID === +classes[i])
+        const cls = stats.find(c => c.classID === +classes[i]);
         return {
-            id: charLvls.find(cls => cls.classID === stats[i].classID).id,
+            id: charLvls.find(charLvl => charLvl.classID === +classes[i]).id,
             class: cls.className,
             level: +lvl,
             toHit: Math.ceil(

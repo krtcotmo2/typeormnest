@@ -27,7 +27,7 @@ export class ArmorService {
             acDesc: body.acDesc,
             charID: body.charID,
             sortValue: body.sortValue,
-            pinned: body.pinned,
+            pinned: body.pinned ?? false,
             createdAt: new Date(),
             updatedAt: new Date()
         };

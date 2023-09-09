@@ -7,8 +7,9 @@ export class ArmorGroupCreate {
   @IsString()
   acDesc: string;
 
+  @IsOptional()
   @IsBoolean()
-  pinned: boolean;
+  pinned?: boolean;
 
   @IsInt()
   sortValue: number;

@@ -2,6 +2,7 @@ import {
     IsBoolean,
     IsDate,
     IsInt,
+    IsOptional,
     IsString,
   } from 'class-validator';
   import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
@@ -25,6 +26,7 @@ import {
     sortValue: number;
 
     @Column()
+    @IsOptional()
     @IsBoolean()
     pinned: boolean;
   

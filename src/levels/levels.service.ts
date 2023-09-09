@@ -35,4 +35,10 @@ export class LevelsService {
         );
     }
 
+    deleteLevel(levelId:number){
+        return from(AppDataSource.manager.delete(
+            Charlevels,
+            {id: levelId})
+        );
+    }
 }

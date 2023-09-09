@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { LevelsService } from './levels.service';
 import { SaveCharLevelDto } from './dto/levels-dto';
 
@@ -19,5 +19,9 @@ export class LevelsController {
     @Post('/save')
     SaveCharLevels(@Body() level: SaveCharLevelDto){
         return this.levelService.saveALevel(level);
+    }
+    @Delete('/delete/:levelId')
+    deleteLevel(@Param('levelId') levelId: number){
+        return this.levelService.deleteLevel(levelId);
     }
 }
