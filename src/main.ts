@@ -9,6 +9,7 @@ async function bootstrap() {
 
   
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
   /* 
     during e2e tests we get failures because the App module skips the main.ts file
     this means we are missing the pipes and session ot the tests. 
@@ -26,6 +27,8 @@ async function bootstrap() {
     })
   )
   */
-  await app.listen(process.env.PORT || 30003);
+ console.log(process.env.PORT)
+ console.log(process.env.NODE_ENV)
+  await app.listen(process.env.PORT || 3001);
 }
 bootstrap();

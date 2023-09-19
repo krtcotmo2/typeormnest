@@ -1,4 +1,5 @@
 export enum StatType {
     MODIFIER="MODIFIER",
-    BASE="BASE"
+    BASE="BASE",
+    TEMPORARY="TEMPORARY"
 }

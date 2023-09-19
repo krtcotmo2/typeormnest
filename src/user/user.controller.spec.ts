@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
 import { AuthService} from './auth.service';
-import { User } from './user.entity';
+import { Users } from './user.entity';
 import { NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/user-dtos';
 import * as AuthServiceModule from './auth.service';
@@ -10,9 +10,9 @@ import { Session } from 'inspector';
 
 describe('UserController', () => {
   let controller: UserController;
-  let users: User[] = [
-    {id: 1, username: 'kurt', password: 'cooney', email: 'kurt@mail.com'} as User,
-    {id: 2, username: 'bryan', password: 'cooney', email: 'bryan@mail.com'} as User,
+  let users: Users[] = [
+    {userID: 1, userName: 'kurt', userPassword: 'cooney', userEmail: 'kurt@mail.com'} as Users,
+    {userID: 2, userName: 'bryan', userPassword: 'cooney', userEmail: 'bryan@mail.com'} as Users,
   ]
   // look in the controller and see all the methods that are called by the services.
   const fakeUserService: Partial<UserService> = {
@@ -27,11 +27,11 @@ describe('UserController', () => {
 
   const fakeAuthService: Partial<AuthService> = {
     validateUser: async (body: CreateUserDto) => {
-      const user = users.find(user => user.username === body.username);
-      return Promise.resolve({id: user.id, email:user.email, username: user.username} as User);
+      const user = users.find(user => user.userName === body.userName);
+      return Promise.resolve({userID: user.userID, userEmail:user.userEmail, userName: user.userName} as Users);
     },
     signup: async (username: string, password: string, email: string) => {
-      return Promise.resolve({} as User);
+      return Promise.resolve({} as Users);
     }
     
   };
@@ -73,14 +73,14 @@ describe('UserController', () => {
       userId: undefined
     }
     const usedObject  = {
-      username: 'kurt', 
-      password: '12345678', 
-      email: 'kurt@mail.com'
-    } as User;
-    const expectedUserId = users.find(user => user.username === usedObject.username).id;
+      userName: 'kurt', 
+      userPassword: '12345678', 
+      userEmail: 'kurt@mail.com'
+    } as Users;
+    const expectedUserId = users.find(user => user.userName === usedObject.userName).userID;
     const newUser = await controller.validateUser(usedObject, session);
     expect(session.userId).toBe(expectedUserId);
-    expect(newUser.id).toBe(expectedUserId)
+    expect(newUser.userEmail).toBe(expectedUserId)
 
   });
 

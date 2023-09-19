@@ -1,9 +1,9 @@
-import { IsDate, IsInt, IsString } from "class-validator";
-import { Column, Entity, PrimaryColumn } from "typeorm";
+import { IsBoolean, IsDate, IsInt, IsString } from "class-validator";
+import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Charsaves{
-    @PrimaryColumn()
+    @PrimaryGeneratedColumn()
     @IsInt()
     id: number;
 
@@ -20,12 +20,12 @@ export class Charsaves{
     score: number;
 
     @Column()
-    @IsInt()
-    isBase: number;
+    @IsBoolean()
+    isBase: boolean;
 
     @Column()
-    @IsInt()
-    isMod: number;
+    @IsBoolean()
+    isMod: boolean;
 
     @Column()
     @IsString()

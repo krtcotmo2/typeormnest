@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Between, LessThan, LessThanOrEqual, MoreThanOrEqual, Repository } from 'typeorm';
 import { ApproverReportDto, CreateReportDto, EstimateDto } from './dto/report-dtos';
 import { Report } from './report.entity';
-import { User } from 'src/user/user.entity';
+import { Users } from 'src/user/user.entity';
 import { UserService } from 'src/user/user.service';
 import { getAveragePrice } from './business-logic/report-business-logic';
 @Injectable()
@@ -30,9 +30,8 @@ export class ReportService {
     return await this.repo.findOneBy({id});
   }
   
-  async create(body: CreateReportDto, user: User ){
+  async create(body: CreateReportDto, user: Users ){
     const report = await this.repo.create(body);
-    report.user = user;
     return this.repo.save(report);
   }
 

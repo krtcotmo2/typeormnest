@@ -1,6 +1,6 @@
 import { Expose, Transform } from "class-transformer";
 import { IsInt, IsOptional, IsString, IsDecimal, Min, Max, IsLatitude, IsLongitude, isBoolean, IsBoolean, } from "class-validator";
-import { User } from "src/user/user.entity";
+import { Users } from "src/user/user.entity";
 
 export class CreateReportDto{
   @IsString()

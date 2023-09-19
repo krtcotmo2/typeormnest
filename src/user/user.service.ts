@@ -1,18 +1,24 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from './user.entity';
-import { CreateUserDto } from './dto/user-dtos';
+import { Users } from './user.entity';
+import { CreateUserDto, LoginUserDto } from './dto/user-dtos';
+import { AppDataSource } from 'src/app-data-source';
+import { from } from 'rxjs';
+
 
 @Injectable()
 export class UserService {
-  constructor(@InjectRepository(User) private repo: Repository<User>){}
-  
-  async searchForDuplicateUser(username: string, email: string){
-    const user =  await this.repo.find({
+  constructor(
+    @InjectRepository(Users) 
+    private repo: Repository<Users>
+  ){
+    
+  }
+  async searchForDuplicateUser(email: string){
+    const user =  await AppDataSource.manager.find(Users, {
       where: [
-       {username},
-        {email}
+        {userEmail: email}
       ],
     });
     if(user.length>0){
@@ -22,27 +28,35 @@ export class UserService {
   }
 
   async findAll(){
-    return await this.repo.find();
+    return await AppDataSource.manager.find(Users);
   }
 
   async fineOne(id: number){
     if(!id){
       throw new BadRequestException('Null Exception');;
     }
-    return await this.repo.findOneBy({id});
+    return await AppDataSource.manager.findOneBy(Users, {userID: id});
   }
 
-  async validateUser(user: CreateUserDto){
-    const authenticatedUser =  await this.repo.findOneBy({
-      username: user.username, 
-      password: user.password
+  async findUserReset(email: string){
+    if(!email){
+      throw new BadRequestException('user_not_found');;
+    }
+    return await AppDataSource.manager.findOneBy(Users, {userEmail: email});
+  }
+
+  async validateUser(user: LoginUserDto){
+    console.log(user.userEmail, user.userPassword)
+    const authenticatedUser =  await AppDataSource.manager.findOneBy(Users, {
+      userEmail: user.userEmail, 
+      userPassword: user.userPassword
     });
      return authenticatedUser;
   }
 
   async create(email: string, username: string, password: string){
-    const user = this.repo.create({email, password, username});
-    return this.repo.save(user);
+    const user = await AppDataSource.manager.create(Users, {userEmail: email, userPassword: password, userName: username});
+    return from(AppDataSource.manager.save(Users,user))
   }
 
   async delete(id: number){
@@ -50,15 +64,16 @@ export class UserService {
     if(!user){
       throw new NotFoundException('User not found');
     }
-    return this.repo.remove(user);
+    return AppDataSource.manager.remove(Users, user);
   }
 
-  async update(id: number, attrs: Partial<User>){
-    const updatedUser = await this.repo.findOneBy({id});
+  async update(id: number, attrs: Partial<Users>, generateNew: boolean = false){
+    const updatedUser = await AppDataSource.manager.findOneBy(Users, {userID: id});
     if(!updatedUser){
       throw new NotFoundException('User not found');
     }
+
     Object.assign(updatedUser, attrs);
-    return this.repo.save(updatedUser);
+    return AppDataSource.manager.save(Users, updatedUser);
   }
 }

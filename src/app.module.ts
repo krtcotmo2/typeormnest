@@ -5,13 +5,23 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { Report } from './report/report.entity';
 import { ReportModule } from './report/report.module';
-import { User } from './user/user.entity';
+import { Users } from './user/user.entity';
 import { UserModule } from './user/user.module';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { CharacterModule } from './character/character.module';
 import { Characters } from './character/characters.entity';
 import { StatModule } from './stat/stat.module';
 import { SavesModule } from './saves/saves.module';
+import { SkillModule } from './skill/skill.module';
+import { ToHitModule } from './to-hit/to-hit.module';
+import { EquipmentModule } from './equipment/equipment.module';
+import { SpellsModule } from './spells/spells.module';
+import { ExpendableModule } from './expendable/expendable.module';
+import { FeatModule } from './feat/feat.module';
+import { LevelsModule } from './levels/levels.module';
+import { ArmorModule } from './armor/armor.module';
+import { NotesModule } from './notes/notes.module';
+import { CharClassesModule } from './char-classes/char-classes.module';
 const cookieSession = require('cookie-session');
 
 @Module({
@@ -23,6 +33,18 @@ const cookieSession = require('cookie-session');
     UserModule, 
     ReportModule,
     CharacterModule,
+    StatModule,
+    SavesModule,
+    SkillModule,
+    ToHitModule,
+    EquipmentModule,
+    SpellsModule,
+    ExpendableModule,
+    FeatModule,
+    LevelsModule,
+    ArmorModule,
+    NotesModule,
+    CharClassesModule,
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory(config: ConfigService) {
@@ -30,19 +52,12 @@ const cookieSession = require('cookie-session');
           type: 'sqlite',
           database: 'db.sqlite',
           //database: config.get<string>('DB_NAME'),
-          entities: [User, Report],
-          synchronize: true,
+          entities: [],
+          synchronize: false,
+          autoLoadEntities: false,
         }
       },
     }),
-    StatModule,
-    SavesModule,
-    // TypeOrmModule.forRoot({
-      //   type: 'sqlite',
-      //   database: 'db.sqlite',
-      //   entities: [User, Report],
-      //   synchronize: true,
-      // })
     ],
     controllers: [AppController],
     providers: [

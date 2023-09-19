@@ -1,7 +1,7 @@
 
 import { Entity, Column, PrimaryGeneratedColumn, AfterInsert, BeforeInsert, BeforeUpdate, BeforeRemove, AfterRemove, AfterUpdate, ManyToOne, JoinColumn } from "typeorm";
 import { IsInt, isDecimal, IsOptional, IsString, IsDecimal } from "class-validator";
-import { User } from "src/user/user.entity";
+import { Users } from "src/user/user.entity";
 
 @Entity()
 export class Report{
@@ -39,11 +39,6 @@ export class Report{
   @Column()
   @IsDecimal()
   milage: number;
-
-  @ManyToOne( () => User, (user) => user.reports)
-  user: User;
-
-
 
    /***** LOGGERS FOR EVENTS *****/
    @BeforeInsert()

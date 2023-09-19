@@ -1,7 +1,9 @@
-import { IsBoolean, IsDate, IsInt, IsOptional, IsString } from "class-validator";
+import { IsBoolean, IsDate, IsIdentityCard, IsInt, IsOptional, IsString } from "class-validator";
 import { Expose } from "class-transformer";
 import { DefinedStats } from "src/stat/dto/stat-dto";
 import { DefinedSaves } from "src/saves/dto/saves-dto";
+import { Alignment } from "src/enum/alignments";
+import { DefinedSKill } from "src/skill/dto/skills-dto";
 
 export class CharactersDto {
   @IsInt()
@@ -45,6 +47,10 @@ export class CharactersDto {
 export class SaveCharactersDto {
  @IsInt()
   userID: number;
+
+  @IsInt()
+  @IsOptional()
+  charID: number;
 
   @IsString()
   charName: string;
@@ -158,11 +164,11 @@ export class CharWithStats {
   CharXP: number;
   
   @Expose()
-  raceID: number;
+  race: string;
   
   @Expose()
-  alignID: number;
-  
+  alignment: string
+
   @Expose()
   init: number;
   
@@ -177,4 +183,7 @@ export class CharWithStats {
 
   @Expose()
   saves: DefinedSaves;
+
+  @Expose()
+  skills: DefinedSKill[];
 }

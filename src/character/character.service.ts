@@ -1,79 +1,211 @@
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Inject,
+  Injectable,
+  NotFoundException,
+  forwardRef,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { forkJoin, from, map, Observable, of, switchMap } from 'rxjs';
+import {
+  catchError,
+  forkJoin,
+  from,
+  map,
+  Observable,
+  of,
+  switchMap,
+} from 'rxjs';
 import { AppDataSource } from 'src/app-data-source';
-import { buildCharSaves } from 'src/saves/business-logic/saves-helper';
-import { Charsaves } from 'src/saves/saves.entity';
+import { Alignment } from 'src/enum/alignments';
+import { Races } from 'src/enum/races';
+import { calcSaves } from 'src/saves/business-logic/saves-helper';
+import { SavesService } from 'src/saves/saves.service';
 import { buildCharStats } from 'src/stat/business-logic/stat-helper';
-import { Charstats } from 'src/stat/stat.entity';
+import { StatService } from 'src/stat/stat.service';
 import { Repository } from 'typeorm';
 import { Characters } from './characters.entity';
-import { CharWithStats, SaveCharactersDto, UpdateCharactersDto } from './dto/character-dto';
-
+import {
+  CharWithStats,
+  CharactersDto,
+  SaveCharactersDto,
+  UpdateCharactersDto,
+  baseChar,
+} from './dto/character-dto';
+import { SkillService } from 'src/skill/skill.service';
+import { LevelsService } from 'src/levels/levels.service';
+import { CharClassesService } from 'src/char-classes/char-classes.service';
+import { calcSavesAndHitsForEachClass } from 'src/char-classes/transformers/transform-char-class-data';
+import { DefinedSaves } from 'src/saves/dto/saves-dto';
+import { ToHitService } from 'src/to-hit/to-hit.service';
+import { ArmorService } from 'src/armor/armor.service';
 
 @Injectable()
 export class CharacterService {
-  constructor( 
-    @InjectRepository(Characters) private repo: Repository<Characters>,
-  ){}
+  constructor(
+    @InjectRepository(Characters)
+    @Inject(forwardRef(() => SavesService))
+    private repo: Repository<Characters>,
+    private statService: StatService,
+    private saveService: SavesService,
+    private skillService: SkillService,
+    private levelsService: LevelsService,
+    private charClassService: CharClassesService,
+    private armorService: ArmorService,
+    private toHitService: ToHitService,
+  ) {}
 
-  getCharacter(id:string): Observable<Characters> {
-    return from(AppDataSource.manager.findOneBy(Characters, {charID: +id})).pipe( 
-      map( (char) =>{
-        if(!char){
-          throw new NotFoundException("Character Not Found");
+  getCharacter(id: string): Observable<Characters> {
+    return from(
+      AppDataSource.manager.findOneBy(Characters, { charID: +id }),
+    ).pipe(
+      map((char) => {
+        if (!char) {
+          throw new NotFoundException('Character Not Found');
         }
         return char;
-      })
+      }),
     );
   }
 
-  getEnv(){
+  getCharacters(): Observable<Characters[]> {
+    return from(
+      AppDataSource.manager.find(Characters, {
+        order: {
+          isDead: 'ASC',
+          charName: 'ASC',
+        },
+      }),
+    ).pipe(map((chars) => chars));
+  }
+
+  getCharactersWithLevels(): Observable<Characters[]> {
+    const chars = this.getCharacters();
+    const lvls = this.levelsService.getAllCharLevels();
+    return forkJoin([chars, lvls]).pipe(
+      switchMap(([chars, lvls]) => {
+        const nChars: Characters[] = chars.map((char) => {
+          return {
+            ...char,
+            levels: lvls.filter((lvl) => lvl.charID === char.charID),
+          };
+        });
+        return of(nChars);
+      }),
+    );
+  }
+
+  getEnv() {
     return {
       mode: process.env.NODE_ENV,
-      user: process.env.socketURL
+      user: process.env.socketURL,
     };
   }
 
-  getCharacterWithStats(id:string): Observable<CharWithStats> {
-    const char =  from(AppDataSource.manager.findOneBy(Characters, {charID: +id}));
-    const stats =  from(AppDataSource.manager.findBy(Charstats, {charID: +id}));
-    const saves =  from(AppDataSource.manager.findBy(Charsaves, {charID: +id}));
-    return forkJoin([char, stats, saves]).pipe( 
-      switchMap( ([char, stats, saves]) => {
-        if(!char){
-          throw new NotFoundException("Character Not Found");
+  getCharacterWithStats(id: string): Observable<CharWithStats> {
+    const char = this.getCharacter(id);
+    const stats = this.statService.getCharStats(id);
+    const saves = this.saveService.getCharSaves(+id);
+    const skills = this.skillService.getCharPinnedSkills(id);
+    return forkJoin([char, stats, saves, skills]).pipe(
+      catchError((err) => {
+        console.log(err);
+        throw err;
+      }),
+      switchMap(([char, stats, saves, skills]) => {
+        if (!char) {
+          throw new NotFoundException('Character Not Found');
         }
-        const hybrid: CharWithStats = {
-          ...char,
-          stats: buildCharStats(stats),
-          saves: buildCharSaves(saves),
-        }
-        return of(hybrid);
-      }) 
+        // const hybrid: CharWithStats = this.getCharacterWithCalcStats(char.charID.toString())
+        return this.getCharacterWithCalcStats(char.charID.toString());
+      }),
     );
   }
 
-  createCharacter(character: SaveCharactersDto): Observable<Characters> {
+  getCharacterWithCalcStats(id: string): Observable<CharWithStats> {
+    const char = this.getCharacter(id);
+    const stats = this.statService.getCharStats(id);
+    const saves = this.saveService.getCharSaves(+id);
+    const skills = this.skillService.getCharPinnedSkills(id);
+    const levels = this.levelsService.getCharLevels(id);
+    const tohits = this.toHitService.getCharToHits(id);
+    const armors = this.armorService.getCharACS(id);
+    let charClassIds, charLevels;
+    let a: any;
+    return levels.pipe(
+      switchMap((retrievedLevels) => {
+        a = retrievedLevels;
+        charClassIds = retrievedLevels.map((lvl) => lvl.classID.toString());
+        charLevels = retrievedLevels.map((lvl) => lvl.classLevel.toString());
+        return this.charClassService.getClassesForLimited(charClassIds);
+      }),
+      switchMap((classStats) => {
+        return forkJoin([char, stats, saves, skills, tohits, armors]).pipe(
+          catchError((err) => {
+            console.log(err);
+            throw err;
+          }),
+          switchMap(([char, stats, saves, skills, tohits, armors]) => {
+            if (!char) {
+              throw new NotFoundException('Character Not Found');
+            }
+            const transformedLevels = calcSavesAndHitsForEachClass(
+              classStats,
+              charClassIds,
+              charLevels,
+              a
+            );
+            const charStats = buildCharStats(stats);
+            const charSaves = calcSaves(transformedLevels, charStats, saves);
+
+            const hybrid = {
+              ...char,
+              race: Races[char.raceID],
+              alignment: Alignment[char.alignID],
+              stats: charStats,
+              saves: charSaves,
+              skills: skills,
+              levels: transformedLevels.map((lvl) => {
+                return {
+                  id: lvl.id,
+                  className: lvl.class,
+                  classLevel: lvl.level,
+                  toHit: lvl.toHit,
+                };
+              }),
+              toHitGroups: tohits,
+              armors
+            };
+            return of(hybrid);
+          }),
+        );
+      }),
+    );
+  }
+
+  async createCharacter(character: SaveCharactersDto): Promise<baseChar> {
     const a = AppDataSource.manager.create(Characters, character);
-    return from(AppDataSource.manager.save(Characters, {
+    return await AppDataSource.manager.save(Characters, {
       ...a,
       image: a.image ?? 'default.png',
       updatedAt: new Date(),
       createdAt: new Date(),
-    }));
+    });
   }
 
-  updateCharacter(char: UpdateCharactersDto, id: number): Observable<any>{
-    return from(AppDataSource.manager.update(
-      Characters,
-      {charID: id},
-      {
-        ...char, 
-        updatedAt: new Date()
-      }
-    ));
-
+  updateCharacter(char: UpdateCharactersDto, id: number): Observable<any> {
+    return from(
+      AppDataSource.manager.update(
+        Characters,
+        { charID: id },
+        {
+          ...char,
+          updatedAt: new Date(),
+        },
+      ),
+    ).pipe(
+      switchMap(() => {
+        return this.getCharacterWithStats(id.toString());
+      }),
+    );
   }
-
 }

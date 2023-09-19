@@ -1,6 +1,6 @@
 import { Expose } from 'class-transformer';
+import { IsBoolean, IsInt, IsOptional, IsString } from 'class-validator';
 import { StatType } from 'src/enum/stat-type';
-import { Charstats } from '../stat.entity';
 
 export class StatDto {
   @Expose()
@@ -16,13 +16,13 @@ export class StatDto {
   score: number;
 
   @Expose()
-  isBase: number;
+  isBase: boolean;
 
   @Expose()
-  isMod: number;
+  isMod: boolean;
 
   @Expose()
-  modDesc: number;
+  modDesc: string;
 }
 
 export class DefinedStats {
@@ -86,4 +86,46 @@ export class DefinedStats {
       modDesc: string;
     }[];
   };
+}
+
+export class SaveStatDto {
+  @IsInt()
+  @IsOptional()
+  charID: number;
+
+  @IsInt()
+  statID: number;
+
+  @IsInt()
+  score: number;
+
+  @IsBoolean()
+  isBase: boolean;
+
+  @IsBoolean()
+  isMod: boolean;
+
+  @IsString()
+  @IsOptional()
+  modDesc: string;
+}
+export class UpdateStatDto {
+  @IsInt()
+  id: number;
+
+  @IsInt()
+  @IsOptional()
+  score: number;
+
+  @IsBoolean()
+  @IsOptional()
+  isBase: boolean;
+
+  @IsBoolean()
+  @IsOptional()
+  isMod: boolean;
+
+  @IsString()
+  @IsOptional()
+  modDesc: string;
 }
