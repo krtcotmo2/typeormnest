@@ -73,7 +73,7 @@ export class ToHitController {
     deleteStatLine(@Param('charId') charId: string, @Param('id') id: string) {
         return this.toHitService.deleteToHitLine(id).pipe(
         switchMap(() => {
-            return this.characterService.getCharacterWithStats(charId);
+            return this.characterService.getCharacterWithCalcStats(charId);
         }),
         map((char) => JSON.stringify(char) ),
         );
