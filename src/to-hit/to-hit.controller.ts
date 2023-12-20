@@ -62,7 +62,7 @@ export class ToHitController {
                 return this.saveToHitLines(newToHitLine, charId);
             }),
             switchMap(() => {
-              return this.getCharToHits(charId);
+              return this.characterService.getCharacterWithCalcStats(charId);
             }),
             map((char) => JSON.stringify(char) ),
           );
