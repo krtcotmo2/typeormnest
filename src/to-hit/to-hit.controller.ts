@@ -31,7 +31,7 @@ export class ToHitController {
     UpdateToHitLines(@Body() tohits: UpdateToHitDto[], @Param('charId') charId: string){
         return this.toHitService.updateToHitLines(tohits).pipe(
             switchMap(() => {
-              return this.characterService.getCharacterWithStats(charId);
+              return this.characterService.getCharacterWithCalcStats(charId);
             }),
             map((char) => JSON.stringify(char) ),
           );
@@ -41,7 +41,7 @@ export class ToHitController {
     saveToHitLines(@Body() toHit: NewToHit, @Param('charId') charId: string){
         return this.toHitService.createToHitLine(toHit).pipe(
             switchMap(() => {
-              return this.characterService.getCharacterWithStats(charId);
+              return this.characterService.getCharacterWithCalcStats(charId);
             }),
             map((char) => JSON.stringify(char) ),
           );

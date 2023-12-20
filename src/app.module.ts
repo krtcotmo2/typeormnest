@@ -48,13 +48,23 @@ const cookieSession = require('cookie-session');
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory(config: ConfigService) {
+        // return {
+        //   type: 'sqlite',
+        //   database: 'db.sqlite',
+        //   //database: config.get<string>('DB_NAME'),
+        //   entities: [],
+        //   synchronize: false,
+        //   autoLoadEntities: false,
+        // }
         return {
-          type: 'sqlite',
-          database: 'db.sqlite',
-          //database: config.get<string>('DB_NAME'),
+          type: 'mysql',
+          host: config.get<string>('dbHost'),
+          port: 3306,
+          username: config.get<string>('dbUser'),
+          password: config.get<string>('dbpass'),
+          database: config.get<string>('DB_NAME'),
           entities: [],
-          synchronize: false,
-          autoLoadEntities: false,
+          synchronize: false
         }
       },
     }),

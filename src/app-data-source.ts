@@ -63,5 +63,10 @@ AppDataSource.initialize()
     console.log('=======> password', process.env.dbpass)
   })
   .catch( err=> {
+    console.log('=======> connection established', __dirname)
+    console.log('=======> dbHost', process.env.dbHost)
+    console.log('=======> source', process.env.dbSource)
+    console.log('=======> userName', process.env.dbUser)
+    console.log('=======> password', process.env.dbpass)
     console.log(err);
   })
