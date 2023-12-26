@@ -34,7 +34,7 @@ export class SkillController {
     UpdateSkillLines(@Body() skills: UpdateSkillDto[], @Param('charId') charId: string){
         return this.skillService.updateSkillLines(skills).pipe(
             switchMap(() => {
-              return this.characterService.getCharacterWithStats(charId);
+              return this.characterService.getCharacterWithCalcStats(charId);
             }),
             map((char) => JSON.stringify(char) ),
           );
@@ -44,7 +44,7 @@ export class SkillController {
     saveSkillLines(@Body() skills: NewSkill, @Param('charId') charId: string){
         return this.skillService.createSkillLine(skills).pipe(
             switchMap(() => {
-              return this.characterService.getCharacterWithStats(charId);
+              return this.characterService.getCharacterWithCalcStats(charId);
             }),
             map((char) => JSON.stringify(char) ),
           );
@@ -55,7 +55,7 @@ export class SkillController {
     saveNewSkill(@Body() skills: NewSkill, @Param('charId') charId: string){
         return this.skillService.createNewSkill(skills).pipe(
             switchMap(() => {
-              return this.getCharSkills(charId);
+                return this.characterService.getCharacterWithCalcStats(charId);
             }),
             map((char) => JSON.stringify(char) ),
           );
@@ -66,7 +66,7 @@ export class SkillController {
     deleteStatLine(@Param('charId') charId: string, @Param('id') id: string) {
         return this.skillService.deleteSkillLine(id).pipe(
         switchMap(() => {
-            return this.characterService.getCharacterWithStats(charId);
+            return this.characterService.getCharacterWithCalcStats(charId);
         }),
         map((char) => JSON.stringify(char) ),
         );
