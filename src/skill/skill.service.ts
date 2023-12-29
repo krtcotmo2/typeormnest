@@ -36,7 +36,7 @@ export class SkillService {
 
   getCharPinnedSkills(charId: string) {
     const charSkill = AppDataSource.manager.find(Charskills, {
-      where: [{charID: +charId, pinned: true}],
+      where: [{charID: +charId}],
       order: {
         skillID: 'DESC',
 
