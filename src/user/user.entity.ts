@@ -37,7 +37,7 @@ export class Users {
   }
   @BeforeUpdate()
   logPreUpdate(){
-    console.log('Attempting to update', this.userName, 'with id', this.userID, this.userPassword);
+    console.log('Attempting to update', this.userName, 'with id', this.userID);
   }
   @AfterUpdate()
   logUpdated(){
@@ -51,9 +51,4 @@ export class Users {
   logRemoved(){
     console.log('Successfully deleted', this.userName, 'with id', this.userID);
   }
-
-
-  
-
-  
 }
