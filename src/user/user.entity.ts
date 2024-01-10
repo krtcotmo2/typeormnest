@@ -37,7 +37,7 @@ export class Users {
   }
   @BeforeUpdate()
   logPreUpdate(){
-    console.log('Attempting to update', this.userName, 'with id', this.userID);
+    console.log('Attempting to update', this.userName, 'with id', this.userID, this.userPassword);
   }
   @AfterUpdate()
   logUpdated(){
