@@ -66,7 +66,6 @@ export class AuthService {
   async resetPassword(user: Partial<Users>){
     const userEmail = user.userEmail;
     const newPassword = createPassword();
-    console.log('newPassword', newPassword)
     const hash = await (scrypt(newPassword, salt, 32)) as Buffer;
 
     await this.updatePassword(userEmail, hash.toString('hex'), true)
